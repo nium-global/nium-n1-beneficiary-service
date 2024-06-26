@@ -1,0 +1,115 @@
+openapi: 3.0.3
+info:
+  title: Core
+  description: |
+    The schemas related to n1-beneficiary-service core
+  termsOfService: https://www.nium.com
+  contact:
+    name: Beneficiary Service
+    url: https://www.nium.com
+    email: core-dev@nium.com
+  license:
+    name: Copyright (c) 2024 NIUM
+  version: 3.0.0
+servers:
+  - url: https://gatewaysandbox.nium.com/beneficiary-service/
+    description: QA server url
+paths: {}
+components:
+  schemas:
+    CountryCode:
+      title: CountryCode
+      pattern: "^[A-Z]{2}$"
+      type: string
+      description: A 2-letter ISO country code.
+      example: US
+      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
+    CurrencyCode:
+      pattern: "^[a-zA-Z]{3}$"
+      type: string
+      description: A 3-letter ISO-4217 currency code.
+      example: USD
+      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
+    Email:
+      title: Email
+      pattern: "^([a-zA-Z0-9+_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,63})$"
+      type: string
+      description: An email address
+      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
+    ContactNumber:
+      title: ContactNumber
+      pattern: "^\\+[0-9]{1,17}$"
+      type: string
+      description: A contact number
+      example: "+911234567890"
+      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
+    PostalCode:
+      title: PostalCode
+      maxLength: 15
+      pattern: "^[0-9]{0,15}$"
+      type: string
+      description: An address postal or zip code.
+      example: "94560"
+      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
+    AddressState:
+      title: AddressState
+      maxLength: 50
+      type: string
+      description: An address state
+      example: "California, Himachal Pradesh, etc."
+      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
+    AddressCity:
+      title: AddressCity
+      maxLength: 50
+      type: string
+      description: An address city
+      example: "Newark, Fremont, Dharamsala, etc."
+      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
+    AddressType:
+      title: AddressType
+      type: string
+      description: A possible address type
+      default: BILLING
+      enum:
+        - MAILING
+        - BILLING
+      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
+    CoreApiHashId:
+      title: CoreApiHashId
+      type: string
+      format: UUID
+      example: abc1234-5d6e-0a8b-c8d7-3a7706a0c312
+      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
+    Name:
+      title: Name
+      maxLength: 255
+      minLength: 1
+      type: string
+      description: An official name
+      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
+    Address:
+      title: Address
+      required:
+        - city
+        - countryCode
+        - line1
+        - postalCode
+        - state
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/AddressType'
+        line1:
+          type: string
+        line2:
+          type: string
+        city:
+          $ref: '#/components/schemas/AddressCity'
+        state:
+          $ref: '#/components/schemas/AddressState'
+        countryCode:
+          $ref: 'core.yaml#/components/schemas/CountryCode'
+        postalCode:
+          $ref: '#/components/schemas/PostalCode'
+      description: An address details.
+      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
