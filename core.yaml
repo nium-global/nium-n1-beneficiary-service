@@ -45,7 +45,6 @@ components:
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     PostalCode:
       title: PostalCode
-      maxLength: 15
       pattern: "^[0-9]{0,15}$"
       type: string
       description: An address postal or zip code.
