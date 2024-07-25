@@ -186,7 +186,7 @@ components:
           BRANCH_ROUTING_CODE: '#/components/schemas/BranchRoutingCode'
           BSB_ROUTING_CODE: '#/components/schemas/BsbRoutingCode'
           BANK_ROUTING_CODE: '#/components/schemas/BankRoutingCode'
-          LOCATION_ROUTING_CODE: '#/components/schemas/LocationIdRoutingCode'
+          LOCATION_ID_ROUTING_CODE: '#/components/schemas/LocationIdRoutingCode'
           TRANSIT_ROUTING_CODE: '#/components/schemas/TransitNumberRoutingCode'
           CNAPS_ROUTING_CODE: '#/components/schemas/CnapsRoutingCode'
           WALLET_ROUTING_CODE: '#/components/schemas/WalletRoutingCode'
