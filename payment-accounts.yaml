@@ -186,7 +186,6 @@ components:
           ACH_ROUTING_CODE: '#/components/schemas/AchRoutingCode'
           BRANCH_ROUTING_CODE: '#/components/schemas/BranchRoutingCode'
           BSB_ROUTING_CODE: '#/components/schemas/BsbRoutingCode'
-          BANK_ROUTING_CODE: '#/components/schemas/BankRoutingCode'
           LOCATION_ID_ROUTING_CODE: '#/components/schemas/LocationIdRoutingCode'
           TRANSIT_NUMBER_ROUTING_CODE: '#/components/schemas/TransitNumberRoutingCode'
           CNAPS_ROUTING_CODE: '#/components/schemas/CnapsRoutingCode'
@@ -199,7 +198,6 @@ components:
         - $ref: '#/components/schemas/AchRoutingCode'
         - $ref: '#/components/schemas/BranchRoutingCode'
         - $ref: '#/components/schemas/BsbRoutingCode'
-        - $ref: '#/components/schemas/BankRoutingCode'
         - $ref: '#/components/schemas/LocationIdRoutingCode'
         - $ref: '#/components/schemas/TransitNumberRoutingCode'
         - $ref: '#/components/schemas/CnapsRoutingCode'
@@ -281,19 +279,6 @@ components:
           properties:
             value:
               pattern: "^[0-9]{6}$"
-              type: string
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
-    BankRoutingCode:
-      type: object
-      description: A bank routing code value
-      allOf:
-        - $ref: '#/components/schemas/RoutingCodeType'
-        - required:
-            - value
-          type: object
-          properties:
-            value:
-              pattern: "^\\d{3}$"
               type: string
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     LocationIdRoutingCode:
