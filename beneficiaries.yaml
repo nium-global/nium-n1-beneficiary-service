@@ -33,14 +33,10 @@ components:
           INDIVIDUAL: '#/components/schemas/IndividualEntityDetails'
           BUSINESS: '#/components/schemas/BusinessEntityDetails'
       allOf:
-        - type: object
-          required:
+        - required:
             - email
-            - entityType
             - name
           properties:
-            entityType:
-              $ref: '#/components/schemas/EntityType'
             name:
               $ref: ./core.yaml#/components/schemas/Name
             email:
@@ -66,9 +62,12 @@ components:
       type: object
       description: A business beneficiary entity details.
       required:
+        - entityType
         - businessRegistrationNumber
-      type: object
       properties:
+        entityType:
+          type: string
+          enum: [ BUSINESS ]
         businessRegistrationNumber:
           $ref: '#/components/schemas/BusinessRegistrationNumber'
         establishmentDate:
@@ -82,7 +81,12 @@ components:
     IndividualEntityDetails:
       type: object
       description: An individual beneficiary entity details.
+      required:
+        - entityType
       properties:
+        entityType:
+          type: string
+          enum: [ INDIVIDUAL ]
         dateOfBirth:
           type: string
           format: date
