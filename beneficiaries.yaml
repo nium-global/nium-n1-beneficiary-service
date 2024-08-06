@@ -24,6 +24,32 @@ components:
         - INDIVIDUAL
         - BUSINESS
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
+    BeneficiaryBaseDetails:
+      type: object
+      description: Base details for a beneficiary entity.
+      properties:
+        name:
+          $ref: './core.yaml#/components/schemas/Name'
+        email:
+          $ref: '#/components/schemas/BeneficiaryEmail'
+        contactNumber:
+          $ref: '#/components/schemas/BeneficiaryContactNumber'
+        addresses:
+          type: array
+          minItems: 1
+          items:
+            $ref: './core.yaml#/components/schemas/Address'
+        communicationPreference:
+          $ref: '#/components/schemas/BeneficiaryCommunicationPreference'
+        remitterBeneficiaryRelationship:
+          $ref: '#/components/schemas/RemitterBeneficiaryRelationship'
+        identification:
+          $ref: '#/components/schemas/BeneficiaryIdentification'
+      required:
+        - email
+        - name
+        - addresses
+      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryEntityDetails:
       type: object
       description: A beneficiary entity details.
@@ -32,64 +58,46 @@ components:
         mapping:
           INDIVIDUAL: '#/components/schemas/IndividualEntityDetails'
           BUSINESS: '#/components/schemas/BusinessEntityDetails'
-      allOf:
-        - required:
-            - email
-            - name
-          properties:
-            name:
-              $ref: ./core.yaml#/components/schemas/Name
-            email:
-              $ref: '#/components/schemas/BeneficiaryEmail'
-            contactNumber:
-              $ref: '#/components/schemas/BeneficiaryContactNumber'
-            addresses:
-              type: array
-              minItems: 1
-              items:
-                $ref: ./core.yaml#/components/schemas/Address
-            communicationPreference:
-              $ref: '#/components/schemas/BeneficiaryCommunicationPreference'
-            remitterBeneficiaryRelationship:
-              $ref: '#/components/schemas/RemitterBeneficiaryRelationship'
-            identification:
-              $ref: '#/components/schemas/BeneficiaryIdentification'
-        - oneOf:
-          - $ref: '#/components/schemas/IndividualEntityDetails'
-          - $ref: '#/components/schemas/BusinessEntityDetails'
+      oneOf:
+        - $ref: '#/components/schemas/IndividualEntityDetails'
+        - $ref: '#/components/schemas/BusinessEntityDetails'
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BusinessEntityDetails:
-      type: object
-      description: A business beneficiary entity details.
-      required:
-        - entityType
-        - businessRegistrationNumber
-      properties:
-        entityType:
-          type: string
-          enum: [ BUSINESS ]
-        businessRegistrationNumber:
-          $ref: '#/components/schemas/BusinessRegistrationNumber'
-        establishmentDate:
-          type: string
-          format: date
+      allOf:
+        - $ref: '#/components/schemas/BeneficiaryBaseDetails'
+        - type: object
+          description: A business beneficiary entity details.
+          properties:
+            entityType:
+              type: string
+              enum: [ BUSINESS ]
+            businessRegistrationNumber:
+              $ref: '#/components/schemas/BusinessRegistrationNumber'
+            establishmentDate:
+              type: string
+              format: date
+          required:
+            - entityType
+            - businessRegistrationNumber
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BusinessRegistrationNumber:
       type: string
       description: A beneficiary's business registration number.
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     IndividualEntityDetails:
-      type: object
-      description: An individual beneficiary entity details.
-      required:
-        - entityType
-      properties:
-        entityType:
-          type: string
-          enum: [ INDIVIDUAL ]
-        dateOfBirth:
-          type: string
-          format: date
+      allOf:
+        - $ref: '#/components/schemas/BeneficiaryBaseDetails'
+        - type: object
+          description: An individual beneficiary entity details.
+          properties:
+            entityType:
+              type: string
+              enum: [ INDIVIDUAL ]
+            dateOfBirth:
+              type: string
+              format: date
+          required:
+            - entityType
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryEmail:
       required:
