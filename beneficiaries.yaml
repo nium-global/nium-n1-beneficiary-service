@@ -28,6 +28,8 @@ components:
       type: object
       description: Base details for a beneficiary entity.
       properties:
+        entityType:
+          type: string
         name:
           $ref: './core.yaml#/components/schemas/Name'
         email:
@@ -46,6 +48,7 @@ components:
         identification:
           $ref: '#/components/schemas/BeneficiaryIdentification'
       required:
+        - entityType
         - email
         - name
         - addresses
@@ -68,16 +71,12 @@ components:
         - type: object
           description: A business beneficiary entity details.
           properties:
-            entityType:
-              type: string
-              enum: [ BUSINESS ]
             businessRegistrationNumber:
               $ref: '#/components/schemas/BusinessRegistrationNumber'
             establishmentDate:
               type: string
               format: date
           required:
-            - entityType
             - businessRegistrationNumber
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BusinessRegistrationNumber:
@@ -90,14 +89,9 @@ components:
         - type: object
           description: An individual beneficiary entity details.
           properties:
-            entityType:
-              type: string
-              enum: [ INDIVIDUAL ]
             dateOfBirth:
               type: string
               format: date
-          required:
-            - entityType
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryEmail:
       required:
