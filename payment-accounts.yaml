@@ -363,10 +363,10 @@ components:
       allOf:
         - $ref: '#/components/schemas/BasePaymentAccount'
         - required:
-            - infoType
+            - informationType
           type: object
           properties:
-            infoType:
+            informationType:
               type: string
         - oneOf:
             - $ref: '#/components/schemas/CardInfoDetails'
