@@ -25,6 +25,13 @@ components:
         - BUSINESS
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryEntityDetails:
+      type: object
+      description: A beneficiary entity details.
+      discriminator:
+        propertyName: entityType
+        mapping:
+          INDIVIDUAL: '#/components/schemas/IndividualEntityDetails'
+          BUSINESS: '#/components/schemas/BusinessEntityDetails'
       allOf:
         - type: object
           required:
