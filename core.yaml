@@ -23,69 +23,63 @@ components:
       type: string
       description: A 2-letter ISO country code.
       example: US
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     CurrencyCode:
       pattern: "^[a-zA-Z]{3}$"
       type: string
       description: A 3-letter ISO-4217 currency code.
       example: USD
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     Email:
       title: Email
       pattern: "^([a-zA-Z0-9+_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,63})$"
       type: string
       description: An email address
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     ContactNumber:
       title: ContactNumber
       pattern: "^\\+[0-9]{1,17}$"
       type: string
       description: A contact number
       example: "+911234567890"
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     PostalCode:
       title: PostalCode
       pattern: "^[0-9]{0,15}$"
       type: string
       description: An address postal or zip code.
       example: "94560"
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     AddressState:
       title: AddressState
-      maxLength: 50
+      pattern: "^[A-Za-z0-9\\s-.():_/]{1,50}$"
       type: string
       description: An address state
-      example: "California, Himachal Pradesh, etc."
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
+      example: "California"
     AddressCity:
       title: AddressCity
-      maxLength: 50
+      pattern: "^[A-Za-z0-9\\s-.():_/]{1,50}$"
       type: string
       description: An address city
-      example: "Newark, Fremont, Dharamsala, etc."
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
+      example: "Newark"
     AddressType:
       title: AddressType
       type: string
       description: A possible address type
-      default: BILLING
+      default: billing
       enum:
-        - MAILING
-        - BILLING
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
+        - mailing
+        - billing
     CoreApiHashId:
       title: CoreApiHashId
       type: string
       format: UUID
       example: abc1234-5d6e-0a8b-c8d7-3a7706a0c312
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     Name:
       title: Name
-      maxLength: 255
-      minLength: 1
+      pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
       type: string
       description: An official name
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
+    Line:
+      title: line
+      pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
+      type: string
+      description: An address line
     Address:
       title: Address
       required:
@@ -99,9 +93,9 @@ components:
         type:
           $ref: '#/components/schemas/AddressType'
         line1:
-          type: string
+          $ref: '#/components/schemas/Line'
         line2:
-          type: string
+          $ref: '#/components/schemas/Line'
         city:
           $ref: '#/components/schemas/AddressCity'
         state:
@@ -111,4 +105,3 @@ components:
         postalCode:
           $ref: '#/components/schemas/PostalCode'
       description: An address details.
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
