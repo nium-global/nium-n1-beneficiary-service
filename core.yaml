@@ -63,7 +63,7 @@ components:
       description: A possible address type
       default: BILLING
       enum:
-        - MAILLING
+        - MAILING
         - BILLING
     CoreApiHashId:
       title: CoreApiHashId
