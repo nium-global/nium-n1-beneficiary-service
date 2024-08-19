@@ -61,10 +61,10 @@ components:
       title: AddressType
       type: string
       description: A possible address type
-      default: billing
+      default: BILLING
       enum:
-        - mailing
-        - billing
+        - MAILLING
+        - BILLING
     CoreApiHashId:
       title: CoreApiHashId
       type: string
