@@ -8119,7 +8119,6 @@ components:
       oneOf:
       - $ref: '#/components/schemas/ECUSDLocalAccountDetails'
       - $ref: '#/components/schemas/USDSwiftAccountDetails'
-      - $ref: '#/components/schemas/USDLocalAccountDetails'
     VGUSDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
