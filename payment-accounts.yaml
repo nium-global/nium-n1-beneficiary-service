@@ -22,6 +22,7 @@ components:
       - paymentMethod
       - payoutCountry
       - payoutCurrency
+      - owner
       type: object
       properties:
         payoutCountry:
@@ -50,10 +51,12 @@ components:
       description: An auto sweep attribute of a payment account.
     PaymentAccountOwnerDetails:
       type: object
+      required:
+      - billingAddress
       properties:
         name:
           $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/main/core.yaml#/components/schemas/Name
-        address:
+        billingAddress:
           $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/main/core.yaml#/components/schemas/Address
       description: A payment account owner PII information.
     BankAccountType:
