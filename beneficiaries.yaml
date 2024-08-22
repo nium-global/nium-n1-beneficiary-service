@@ -36,11 +36,8 @@ components:
           $ref: '#/components/schemas/BeneficiaryEmail'
         contactNumber:
           $ref: '#/components/schemas/BeneficiaryContactNumber'
-        addresses:
-          type: array
-          minItems: 1
-          items:
-            $ref: './core.yaml#/components/schemas/Address'
+        mailingAddress:
+          $ref: './core.yaml#/components/schemas/Address'
         communicationPreference:
           $ref: '#/components/schemas/BeneficiaryCommunicationPreference'
         remitterBeneficiaryRelationship:
@@ -51,7 +48,7 @@ components:
         - entityType
         - email
         - name
-        - addresses
+        - mailingAddress
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryEntityDetails:
       type: object
