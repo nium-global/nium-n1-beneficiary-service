@@ -21,8 +21,8 @@ components:
       type: string
       description: A beneficiary entity type.
       enum:
-        - INDIVIDUAL
-        - BUSINESS
+        - individual
+        - business
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryBaseDetails:
       type: object
@@ -36,11 +36,6 @@ components:
           $ref: '#/components/schemas/BeneficiaryEmail'
         contactNumber:
           $ref: '#/components/schemas/BeneficiaryContactNumber'
-        addresses:
-          type: array
-          minItems: 1
-          items:
-            $ref: './core.yaml#/components/schemas/Address'
         communicationPreference:
           $ref: '#/components/schemas/BeneficiaryCommunicationPreference'
         remitterBeneficiaryRelationship:
@@ -51,7 +46,6 @@ components:
         - entityType
         - email
         - name
-        - addresses
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryEntityDetails:
       type: object
@@ -59,8 +53,8 @@ components:
       discriminator:
         propertyName: entityType
         mapping:
-          INDIVIDUAL: '#/components/schemas/IndividualEntityDetails'
-          BUSINESS: '#/components/schemas/BusinessEntityDetails'
+          individual: '#/components/schemas/IndividualEntityDetails'
+          business: '#/components/schemas/BusinessEntityDetails'
       oneOf:
         - $ref: '#/components/schemas/IndividualEntityDetails'
         - $ref: '#/components/schemas/BusinessEntityDetails'
@@ -121,8 +115,8 @@ components:
       type: string
       description: A preferred communication channel of a beneficiary.
       enum:
-        - PHONE
-        - EMAIL
+        - phone
+        - email
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryChannel:
       type: object
@@ -139,8 +133,8 @@ components:
       type: string
       description: A possible values of a beneficiary's channel type.
       enum:
-        - HOSTED
-        - API
+        - hosted
+        - api
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryIdentification:
       type: object
