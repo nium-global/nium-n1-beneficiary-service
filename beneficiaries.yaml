@@ -53,8 +53,8 @@ components:
       discriminator:
         propertyName: entityType
         mapping:
-          INDIVIDUAL: '#/components/schemas/IndividualEntityDetails'
-          BUSINESS: '#/components/schemas/BusinessEntityDetails'
+          individual: '#/components/schemas/IndividualEntityDetails'
+          business: '#/components/schemas/BusinessEntityDetails'
       oneOf:
         - $ref: '#/components/schemas/IndividualEntityDetails'
         - $ref: '#/components/schemas/BusinessEntityDetails'
