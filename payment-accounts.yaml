@@ -25,9 +25,9 @@ components:
       type: object
       properties:
         payoutCountry:
-          $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/main/core.yaml#/components/schemas/CountryCode
+          $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/CountryCode
         payoutCurrency:
-          $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/main/core.yaml#/components/schemas/CurrencyCode
+          $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/CurrencyCode
         paymentMethod:
           type: string
         autoSweep:
@@ -52,9 +52,9 @@ components:
       type: object
       properties:
         name:
-          $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/main/core.yaml#/components/schemas/Name
+          $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
         address:
-          $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/main/core.yaml#/components/schemas/Address
+          $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Address
       description: A payment account owner PII information.
     BankAccountType:
       type: string
