@@ -60,10 +60,10 @@ components:
       type: string
       description: A possible values of a bank account type of a beneficiary.
       enum:
-      - CHECKING
-      - SAVING
-      - MAESTRA
-      - CURRENT
+        - checking
+        - saving
+        - maestra
+        - current
     BankName:
       pattern: "^.{0,255}$"
       type: string
@@ -231,19 +231,19 @@ components:
       type: string
       description: A possible value of proxy payment account type.
       enum:
-      - MOBILE
-      - UEN
-      - NRIC
-      - VPA
-      - ID
-      - EMAIL
-      - RANDOM_KEY
-      - ABN
-      - PASSPORT
-      - CORPORATE_REGISTRATION_NUMBER
-      - ARMY_ID
-      - FPS_ID
-      - ORGANISATION_ID
+        - mobile
+        - uen
+        - nric
+        - vpa
+        - id
+        - email
+        - random_key
+        - abn
+        - passport
+        - corporate_registration_number
+        - army_id
+        - fps_id
+        - organisation_id
     ProxyValue:
       pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
       type: string
