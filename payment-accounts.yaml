@@ -14330,11 +14330,15 @@ components:
             - saving
             - maestra
             - current
+            - time_deposit
+            - other
             x-enum-varnames:
             - checking
             - saving
             - maestra
             - current
+            - time_deposit
+            - other
           routingCodes:
             minItems: 1
             type: array
