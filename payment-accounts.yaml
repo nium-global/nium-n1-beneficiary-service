@@ -67,11 +67,15 @@ components:
       - saving
       - maestra
       - current
+      - time_deposit
+      - other
       x-enum-varnames:
       - checking
       - saving
       - maestra
       - current
+      - time_deposit
+      - other
     BankName:
       pattern: "^.{0,255}$"
       type: string
@@ -3920,18 +3924,18 @@ components:
             description: Length of Bank code should be 4 digits.
           accountType:
             type: string
-            description: "Bank Account should be of the type : saving, checking, Time\
-              \ Deposit or Others."
+            description: "Bank Account should be of the type : saving, checking, time_deposit\
+              \ or other."
             enum:
             - saving
             - checking
-            - Time Deposit
-            - Others
+            - time_deposit
+            - other
             x-enum-varnames:
             - saving
             - checking
-            - Time Deposit
-            - Others
+            - time_deposit
+            - other
           routingCodes:
             minItems: 1
             type: array
