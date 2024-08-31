@@ -50,6 +50,8 @@ components:
           default: false
       description: An auto sweep attribute of a payment account.
     PaymentAccountOwnerDetails:
+      required:
+      - address
       type: object
       properties:
         name:
@@ -61,15 +63,15 @@ components:
       type: string
       description: A possible values of a bank account type of a beneficiary.
       enum:
-        - checking
-        - saving
-        - maestra
-        - current
+      - checking
+      - saving
+      - maestra
+      - current
       x-enum-varnames:
-        - checking
-        - saving
-        - maestra
-        - current
+      - checking
+      - saving
+      - maestra
+      - current
     BankName:
       pattern: "^.{0,255}$"
       type: string
@@ -301,33 +303,33 @@ components:
       type: string
       description: A possible value of proxy payment account type.
       enum:
-        - mobile
-        - uen
-        - nric
-        - vpa
-        - id
-        - email
-        - random_key
-        - abn
-        - passport
-        - corporate_registration_number
-        - army_id
-        - fps_id
-        - organisation_id
+      - mobile
+      - uen
+      - nric
+      - vpa
+      - id
+      - email
+      - random_key
+      - abn
+      - passport
+      - corporate_registration_number
+      - army_id
+      - fps_id
+      - organisation_id
       x-enum-varnames:
-        - mobile
-        - uen
-        - nric
-        - vpa
-        - id
-        - email
-        - random_key
-        - abn
-        - passport
-        - corporate_registration_number
-        - army_id
-        - fps_id
-        - organisation_id
+      - mobile
+      - uen
+      - nric
+      - vpa
+      - id
+      - email
+      - random_key
+      - abn
+      - passport
+      - corporate_registration_number
+      - army_id
+      - fps_id
+      - organisation_id
     ProxyValue:
       pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
       type: string
@@ -420,6 +422,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -494,6 +501,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -560,6 +572,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -633,6 +650,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -822,7 +844,7 @@ components:
       - $ref: '#/components/schemas/GIHKDPaymentMethods'
       - $ref: '#/components/schemas/GISGDPaymentMethods'
       - $ref: '#/components/schemas/GIAUDPaymentMethods'
-    PHPLocalAccountDetails:
+    MYRLocalAccountDetails:
       description: A local payment account details of a beneficiary
       allOf:
       - $ref: '#/components/schemas/BasePaymentAccount'
@@ -844,72 +866,7 @@ components:
             - saving
             - maestra
             - current
-          routingCodes:
-            minItems: 1
-            type: array
-            items:
-              discriminator:
-                propertyName: type
-                mapping:
-                  swift: '#/components/schemas/SwiftRoutingCode1'
-              oneOf:
-              - $ref: '#/components/schemas/SwiftRoutingCode1'
-          accountNumber:
-            pattern: "^.{1,25}$"
-            type: string
-            description: Length of Account Number should not be more than 25 characters.
-    PHPHPPaymentMethods:
-      discriminator:
-        propertyName: paymentMethod
-        mapping:
-          local: '#/components/schemas/PHPLocalAccountDetails'
-      oneOf:
-      - $ref: '#/components/schemas/PHPLocalAccountDetails'
-    AllowedCurrenciesForPH:
-      discriminator:
-        propertyName: payoutCurrency
-        mapping:
-          PHP: '#/components/schemas/PHPHPPaymentMethods'
-          SGD: '#/components/schemas/PHSGDPaymentMethods'
-          CAD: '#/components/schemas/PHCADPaymentMethods'
-          USD: '#/components/schemas/PHUSDPaymentMethods'
-          GBP: '#/components/schemas/PHGBPPaymentMethods'
-          AUD: '#/components/schemas/PHAUDPaymentMethods'
-          EUR: '#/components/schemas/PHEURPaymentMethods'
-          CHF: '#/components/schemas/PHCHFPaymentMethods'
-          HKD: '#/components/schemas/PHHKDPaymentMethods'
-          NZD: '#/components/schemas/PHNZDPaymentMethods'
-          JPY: '#/components/schemas/PHJPYPaymentMethods'
-      oneOf:
-      - $ref: '#/components/schemas/PHPHPPaymentMethods'
-      - $ref: '#/components/schemas/PHGBPPaymentMethods'
-      - $ref: '#/components/schemas/PHUSDPaymentMethods'
-      - $ref: '#/components/schemas/PHNZDPaymentMethods'
-      - $ref: '#/components/schemas/PHCADPaymentMethods'
-      - $ref: '#/components/schemas/PHEURPaymentMethods'
-      - $ref: '#/components/schemas/PHHKDPaymentMethods'
-      - $ref: '#/components/schemas/PHJPYPaymentMethods'
-      - $ref: '#/components/schemas/PHCHFPaymentMethods'
-      - $ref: '#/components/schemas/PHSGDPaymentMethods'
-      - $ref: '#/components/schemas/PHAUDPaymentMethods'
-    MYRLocalAccountDetails:
-      description: A local payment account details of a beneficiary
-      allOf:
-      - $ref: '#/components/schemas/BasePaymentAccount'
-      - required:
-        - accountNumber
-        - routingCodes
-        type: object
-        properties:
-          bankCode:
-            pattern: "^[0-9]{0,15}$|^\\d{4}$|^[0-9]{3}$"
-            type: string
-            description: A bank account code of a beneficiary.
-          accountType:
-            type: string
-            description: "Bank Account should be of the type : checking, saving, maestra\
-              \ or current."
-            enum:
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -987,6 +944,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -1053,6 +1015,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -1127,6 +1094,9 @@ components:
             enum:
             - checking
             - saving
+            x-enum-varnames:
+            - checking
+            - saving
           routingCodes:
             minItems: 1
             type: array
@@ -1194,6 +1164,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -1268,6 +1243,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           accountNumber:
             pattern: "^[0-9A-Za-z]{1,50}$"
             type: string
@@ -1325,6 +1305,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -1402,6 +1387,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -1471,6 +1461,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -1549,6 +1544,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -1616,6 +1616,9 @@ components:
             enum:
             - checking
             - saving
+            x-enum-varnames:
+            - checking
+            - saving
           accountNumber:
             pattern: "^[0-9]{22}$"
             type: string
@@ -1676,6 +1679,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           accountNumber:
             pattern: "^[0-9a-zA-Z .,_-]*$"
             type: string
@@ -1732,6 +1740,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -1802,6 +1815,9 @@ components:
             type: string
             description: "Bank Account should be of the type : checking or saving."
             enum:
+            - checking
+            - saving
+            x-enum-varnames:
             - checking
             - saving
           routingCodes:
@@ -1875,6 +1891,9 @@ components:
             enum:
             - checking
             - saving
+            x-enum-varnames:
+            - checking
+            - saving
           routingCodes:
             minItems: 1
             type: array
@@ -1943,6 +1962,9 @@ components:
             enum:
             - checking
             - saving
+            x-enum-varnames:
+            - checking
+            - saving
           routingCodes:
             minItems: 1
             type: array
@@ -1992,65 +2014,6 @@ components:
       - $ref: '#/components/schemas/COHKDPaymentMethods'
       - $ref: '#/components/schemas/COJPYPaymentMethods'
       - $ref: '#/components/schemas/COCHFPaymentMethods'
-    MXNLocalAccountDetails:
-      description: A local payment account details of a beneficiary
-      allOf:
-      - $ref: '#/components/schemas/BasePaymentAccount'
-      - required:
-        - accountNumber
-        type: object
-        properties:
-          bankCode:
-            pattern: "^[0-9]{0,15}$|^\\d{4}$|^[0-9]{3}$"
-            type: string
-            description: A bank account code of a beneficiary.
-          accountType:
-            type: string
-            description: "Bank Account should be of the type : checking, saving, maestra\
-              \ or current."
-            enum:
-            - checking
-            - saving
-            - maestra
-            - current
-          accountNumber:
-            pattern: "^[0-9]{18}$"
-            type: string
-            description: Length of Account number (CLABE) should be 18 characters.
-    MXMXNPaymentMethods:
-      discriminator:
-        propertyName: paymentMethod
-        mapping:
-          local: '#/components/schemas/MXNLocalAccountDetails'
-      oneOf:
-      - $ref: '#/components/schemas/MXNLocalAccountDetails'
-    AllowedCurrenciesForMX:
-      discriminator:
-        propertyName: payoutCurrency
-        mapping:
-          MXN: '#/components/schemas/MXMXNPaymentMethods'
-          SGD: '#/components/schemas/MXSGDPaymentMethods'
-          CAD: '#/components/schemas/MXCADPaymentMethods'
-          USD: '#/components/schemas/MXUSDPaymentMethods'
-          GBP: '#/components/schemas/MXGBPPaymentMethods'
-          AUD: '#/components/schemas/MXAUDPaymentMethods'
-          EUR: '#/components/schemas/MXEURPaymentMethods'
-          CHF: '#/components/schemas/MXCHFPaymentMethods'
-          HKD: '#/components/schemas/MXHKDPaymentMethods'
-          NZD: '#/components/schemas/MXNZDPaymentMethods'
-          JPY: '#/components/schemas/MXJPYPaymentMethods'
-      oneOf:
-      - $ref: '#/components/schemas/MXCADPaymentMethods'
-      - $ref: '#/components/schemas/MXGBPPaymentMethods'
-      - $ref: '#/components/schemas/MXUSDPaymentMethods'
-      - $ref: '#/components/schemas/MXHKDPaymentMethods'
-      - $ref: '#/components/schemas/MXNZDPaymentMethods'
-      - $ref: '#/components/schemas/MXJPYPaymentMethods'
-      - $ref: '#/components/schemas/MXMXNPaymentMethods'
-      - $ref: '#/components/schemas/MXEURPaymentMethods'
-      - $ref: '#/components/schemas/MXCHFPaymentMethods'
-      - $ref: '#/components/schemas/MXSGDPaymentMethods'
-      - $ref: '#/components/schemas/MXAUDPaymentMethods'
     PENLocalAccountDetails:
       description: A local payment account details of a beneficiary
       allOf:
@@ -2068,6 +2031,9 @@ components:
             type: string
             description: "Bank Account should be of the type : checking or saving "
             enum:
+            - checking
+            - saving
+            x-enum-varnames:
             - checking
             - saving
           routingCodes:
@@ -2135,6 +2101,9 @@ components:
             type: string
             description: "Bank Account should be of the type : checking or saving."
             enum:
+            - checking
+            - saving
+            x-enum-varnames:
             - checking
             - saving
           routingCodes:
@@ -2211,6 +2180,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -2278,6 +2252,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -3806,6 +3785,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           accountNumber:
             pattern: "^(TR|tr)[0-9]{24}$"
             type: string
@@ -3863,6 +3847,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -3938,6 +3927,11 @@ components:
             - checking
             - Time Deposit
             - Others
+            x-enum-varnames:
+            - saving
+            - checking
+            - Time Deposit
+            - Others
           routingCodes:
             minItems: 1
             type: array
@@ -4003,6 +3997,9 @@ components:
             type: string
             description: "Bank Account should be of the type : checking, saving."
             enum:
+            - checking
+            - saving
+            x-enum-varnames:
             - checking
             - saving
           routingCodes:
@@ -4078,6 +4075,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -4133,6 +4135,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -4172,6 +4179,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -4219,6 +4231,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -4258,6 +4275,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -4305,6 +4327,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -4344,6 +4371,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -4388,6 +4420,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -4461,6 +4498,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           accountNumber:
             pattern: "^PL[0-9]{26}$"
             type: string
@@ -4490,6 +4532,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -5004,6 +5051,33 @@ components:
           swift: '#/components/schemas/SGDSwiftAccountDetails'
       oneOf:
       - $ref: '#/components/schemas/SGDSwiftAccountDetails'
+    AllowedCurrenciesForMX:
+      discriminator:
+        propertyName: payoutCurrency
+        mapping:
+          SGD: '#/components/schemas/MXSGDPaymentMethods'
+          CAD: '#/components/schemas/MXCADPaymentMethods'
+          USD: '#/components/schemas/MXUSDPaymentMethods'
+          GBP: '#/components/schemas/MXGBPPaymentMethods'
+          AUD: '#/components/schemas/MXAUDPaymentMethods'
+          EUR: '#/components/schemas/MXEURPaymentMethods'
+          CHF: '#/components/schemas/MXCHFPaymentMethods'
+          HKD: '#/components/schemas/MXHKDPaymentMethods'
+          NZD: '#/components/schemas/MXNZDPaymentMethods'
+          JPY: '#/components/schemas/MXJPYPaymentMethods'
+          MXN: '#/components/schemas/MXMXNPaymentMethods'
+      oneOf:
+      - $ref: '#/components/schemas/MXCADPaymentMethods'
+      - $ref: '#/components/schemas/MXGBPPaymentMethods'
+      - $ref: '#/components/schemas/MXUSDPaymentMethods'
+      - $ref: '#/components/schemas/MXHKDPaymentMethods'
+      - $ref: '#/components/schemas/MXNZDPaymentMethods'
+      - $ref: '#/components/schemas/MXJPYPaymentMethods'
+      - $ref: '#/components/schemas/MXMXNPaymentMethods'
+      - $ref: '#/components/schemas/MXEURPaymentMethods'
+      - $ref: '#/components/schemas/MXCHFPaymentMethods'
+      - $ref: '#/components/schemas/MXSGDPaymentMethods'
+      - $ref: '#/components/schemas/MXAUDPaymentMethods'
     MSSGDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -5082,6 +5156,33 @@ components:
           swift: '#/components/schemas/SGDSwiftAccountDetails'
       oneOf:
       - $ref: '#/components/schemas/SGDSwiftAccountDetails'
+    AllowedCurrenciesForPH:
+      discriminator:
+        propertyName: payoutCurrency
+        mapping:
+          SGD: '#/components/schemas/PHSGDPaymentMethods'
+          CAD: '#/components/schemas/PHCADPaymentMethods'
+          USD: '#/components/schemas/PHUSDPaymentMethods'
+          GBP: '#/components/schemas/PHGBPPaymentMethods'
+          AUD: '#/components/schemas/PHAUDPaymentMethods'
+          EUR: '#/components/schemas/PHEURPaymentMethods'
+          CHF: '#/components/schemas/PHCHFPaymentMethods'
+          HKD: '#/components/schemas/PHHKDPaymentMethods'
+          NZD: '#/components/schemas/PHNZDPaymentMethods'
+          JPY: '#/components/schemas/PHJPYPaymentMethods'
+          PHP: '#/components/schemas/PHPHPPaymentMethods'
+      oneOf:
+      - $ref: '#/components/schemas/PHPHPPaymentMethods'
+      - $ref: '#/components/schemas/PHGBPPaymentMethods'
+      - $ref: '#/components/schemas/PHUSDPaymentMethods'
+      - $ref: '#/components/schemas/PHNZDPaymentMethods'
+      - $ref: '#/components/schemas/PHCADPaymentMethods'
+      - $ref: '#/components/schemas/PHEURPaymentMethods'
+      - $ref: '#/components/schemas/PHHKDPaymentMethods'
+      - $ref: '#/components/schemas/PHJPYPaymentMethods'
+      - $ref: '#/components/schemas/PHCHFPaymentMethods'
+      - $ref: '#/components/schemas/PHSGDPaymentMethods'
+      - $ref: '#/components/schemas/PHAUDPaymentMethods'
     STSGDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -9900,6 +10001,9 @@ components:
             enum:
             - checking
             - saving
+            x-enum-varnames:
+            - checking
+            - saving
           routingCodes:
             minItems: 1
             type: array
@@ -9943,6 +10047,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -9982,6 +10091,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -10030,6 +10144,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -10070,6 +10189,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -10117,6 +10241,11 @@ components:
                 - uen
                 - nric
                 - vpa
+                x-enum-varnames:
+                - mobile
+                - uen
+                - nric
+                - vpa
               value:
                 pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
                 type: string
@@ -10143,6 +10272,11 @@ components:
                 - email
                 - ID
                 - random_key
+                x-enum-varnames:
+                - mobile
+                - email
+                - ID
+                - random_key
               value:
                 pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
                 type: string
@@ -10165,6 +10299,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -10212,6 +10351,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -10251,6 +10395,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -10296,6 +10445,8 @@ components:
                 description: Proxy Type should be vpa.
                 enum:
                 - vpa
+                x-enum-varnames:
+                - vpa
               value:
                 pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
                 type: string
@@ -10318,6 +10469,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -10365,6 +10521,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -10404,6 +10565,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -10453,6 +10619,12 @@ components:
                 - corporate_registration_number
                 - mobile
                 - army_id
+                x-enum-varnames:
+                - nric
+                - passport
+                - corporate_registration_number
+                - mobile
+                - army_id
               value:
                 pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
                 type: string
@@ -10475,6 +10647,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -10522,6 +10699,11 @@ components:
                 - email
                 - abn
                 - organisation_id
+                x-enum-varnames:
+                - mobile
+                - email
+                - abn
+                - organisation_id
               value:
                 pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
                 type: string
@@ -10544,6 +10726,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -12159,6 +12346,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           accountNumber:
             pattern: "^(?:BJ|CI|SN|TG|BF)(?:[A-Za-z0-9]{26}|[0-9]{22})$"
             type: string
@@ -12216,6 +12408,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -13864,6 +14061,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -13907,6 +14109,10 @@ components:
                 - email
                 - mobile
                 - fps_id
+                x-enum-varnames:
+                - email
+                - mobile
+                - fps_id
               value:
                 pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
                 type: string
@@ -13929,6 +14135,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -13975,6 +14186,10 @@ components:
             - checking
             - current
             - saving
+            x-enum-varnames:
+            - checking
+            - current
+            - saving
           routingCodes:
             minItems: 1
             type: array
@@ -14014,6 +14229,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -14060,6 +14280,10 @@ components:
             - checking
             - saving
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -14098,6 +14322,11 @@ components:
             type: string
             description: A possible values of a bank account type of a beneficiary.
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -14146,6 +14375,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -14184,6 +14418,9 @@ components:
             type: string
             description: "Bank Account should be of the type : checking, saving"
             enum:
+            - checking
+            - saving
+            x-enum-varnames:
             - checking
             - saving
           routingCodes:
@@ -14225,6 +14462,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -15809,6 +16051,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -17425,6 +17672,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -18725,6 +18977,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -20330,6 +20587,11 @@ components:
             description: "Bank Account should be of the type : checking, saving, maestra\
               \ or current."
             enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
             - checking
             - saving
             - maestra
@@ -21946,6 +22208,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -23558,6 +23825,11 @@ components:
             - saving
             - maestra
             - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
           routingCodes:
             minItems: 1
             type: array
@@ -25148,239 +25420,324 @@ components:
           swift: '#/components/schemas/JPYSwiftAccountDetails'
       oneOf:
       - $ref: '#/components/schemas/JPYSwiftAccountDetails'
+    PHPLocalAccountDetails:
+      description: A local payment account details of a beneficiary
+      allOf:
+      - $ref: '#/components/schemas/BasePaymentAccount'
+      - required:
+        - accountNumber
+        - routingCodes
+        type: object
+        properties:
+          bankCode:
+            pattern: "^[0-9]{0,15}$|^\\d{4}$|^[0-9]{3}$"
+            type: string
+            description: A bank account code of a beneficiary.
+          accountType:
+            type: string
+            description: "Bank Account should be of the type : checking, saving, maestra\
+              \ or current."
+            enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
+          routingCodes:
+            minItems: 1
+            type: array
+            items:
+              discriminator:
+                propertyName: type
+                mapping:
+                  swift: '#/components/schemas/SwiftRoutingCode1'
+              oneOf:
+              - $ref: '#/components/schemas/SwiftRoutingCode1'
+          accountNumber:
+            pattern: "^.{1,25}$"
+            type: string
+            description: Length of Account Number should not be more than 25 characters.
+    PHPHPPaymentMethods:
+      discriminator:
+        propertyName: paymentMethod
+        mapping:
+          local: '#/components/schemas/PHPLocalAccountDetails'
+      oneOf:
+      - $ref: '#/components/schemas/PHPLocalAccountDetails'
+    MXNLocalAccountDetails:
+      description: A local payment account details of a beneficiary
+      allOf:
+      - $ref: '#/components/schemas/BasePaymentAccount'
+      - required:
+        - accountNumber
+        type: object
+        properties:
+          bankCode:
+            pattern: "^[0-9]{0,15}$|^\\d{4}$|^[0-9]{3}$"
+            type: string
+            description: A bank account code of a beneficiary.
+          accountType:
+            type: string
+            description: "Bank Account should be of the type : checking, saving, maestra\
+              \ or current."
+            enum:
+            - checking
+            - saving
+            - maestra
+            - current
+            x-enum-varnames:
+            - checking
+            - saving
+            - maestra
+            - current
+          accountNumber:
+            pattern: "^[0-9]{18}$"
+            type: string
+            description: Length of Account number (CLABE) should be 18 characters.
+    MXMXNPaymentMethods:
+      discriminator:
+        propertyName: paymentMethod
+        mapping:
+          local: '#/components/schemas/MXNLocalAccountDetails'
+      oneOf:
+      - $ref: '#/components/schemas/MXNLocalAccountDetails'
     PaymentAccountDetails:
       discriminator:
         propertyName: payoutCountry
         mapping:
-          AU: '#/components/schemas/AllowedCurrenciesForAU'
-          ID: '#/components/schemas/AllowedCurrenciesForID'
-          IN: '#/components/schemas/AllowedCurrenciesForIN'
-          GB: '#/components/schemas/AllowedCurrenciesForGB'
-          IM: '#/components/schemas/AllowedCurrenciesForIM'
-          GG: '#/components/schemas/AllowedCurrenciesForGG'
-          JE: '#/components/schemas/AllowedCurrenciesForJE'
-          GI: '#/components/schemas/AllowedCurrenciesForGI'
-          PH: '#/components/schemas/AllowedCurrenciesForPH'
-          MY: '#/components/schemas/AllowedCurrenciesForMY'
-          TH: '#/components/schemas/AllowedCurrenciesForTH'
-          US: '#/components/schemas/AllowedCurrenciesForUS'
-          EC: '#/components/schemas/AllowedCurrenciesForEC'
-          VN: '#/components/schemas/AllowedCurrenciesForVN'
-          NP: '#/components/schemas/AllowedCurrenciesForNP'
-          SG: '#/components/schemas/AllowedCurrenciesForSG'
-          HK: '#/components/schemas/AllowedCurrenciesForHK'
-          BD: '#/components/schemas/AllowedCurrenciesForBD'
-          LK: '#/components/schemas/AllowedCurrenciesForLK'
-          AR: '#/components/schemas/AllowedCurrenciesForAR'
-          KR: '#/components/schemas/AllowedCurrenciesForKR'
-          PK: '#/components/schemas/AllowedCurrenciesForPK'
-          BR: '#/components/schemas/AllowedCurrenciesForBR'
-          CL: '#/components/schemas/AllowedCurrenciesForCL'
-          CO: '#/components/schemas/AllowedCurrenciesForCO'
-          MX: '#/components/schemas/AllowedCurrenciesForMX'
-          PE: '#/components/schemas/AllowedCurrenciesForPE'
-          UY: '#/components/schemas/AllowedCurrenciesForUY'
-          CA: '#/components/schemas/AllowedCurrenciesForCA'
-          EE: '#/components/schemas/AllowedCurrenciesForEE'
-          BE: '#/components/schemas/AllowedCurrenciesForBE'
-          BG: '#/components/schemas/AllowedCurrenciesForBG'
-          MT: '#/components/schemas/AllowedCurrenciesForMT'
-          LT: '#/components/schemas/AllowedCurrenciesForLT'
-          LV: '#/components/schemas/AllowedCurrenciesForLV'
-          FR: '#/components/schemas/AllowedCurrenciesForFR'
-          ES: '#/components/schemas/AllowedCurrenciesForES'
-          CY: '#/components/schemas/AllowedCurrenciesForCY'
-          CZ: '#/components/schemas/AllowedCurrenciesForCZ'
-          SK: '#/components/schemas/AllowedCurrenciesForSK'
-          PL: '#/components/schemas/AllowedCurrenciesForPL'
-          IE: '#/components/schemas/AllowedCurrenciesForIE'
-          NL: '#/components/schemas/AllowedCurrenciesForNL'
-          DE: '#/components/schemas/AllowedCurrenciesForDE'
-          PT: '#/components/schemas/AllowedCurrenciesForPT'
-          DK: '#/components/schemas/AllowedCurrenciesForDK'
-          LU: '#/components/schemas/AllowedCurrenciesForLU'
-          HR: '#/components/schemas/AllowedCurrenciesForHR'
-          HU: '#/components/schemas/AllowedCurrenciesForHU'
-          MC: '#/components/schemas/AllowedCurrenciesForMC'
-          YT: '#/components/schemas/AllowedCurrenciesForYT'
-          AD: '#/components/schemas/AllowedCurrenciesForAD'
-          MQ: '#/components/schemas/AllowedCurrenciesForMQ'
-          IS: '#/components/schemas/AllowedCurrenciesForIS'
-          IT: '#/components/schemas/AllowedCurrenciesForIT'
-          VA: '#/components/schemas/AllowedCurrenciesForVA'
-          RE: '#/components/schemas/AllowedCurrenciesForRE'
-          AT: '#/components/schemas/AllowedCurrenciesForAT'
-          NC: '#/components/schemas/AllowedCurrenciesForNC'
-          RO: '#/components/schemas/AllowedCurrenciesForRO'
-          "NO": '#/components/schemas/AllowedCurrenciesForNO'
-          FI: '#/components/schemas/AllowedCurrenciesForFI'
-          WF: '#/components/schemas/AllowedCurrenciesForWF'
-          SE: '#/components/schemas/AllowedCurrenciesForSE'
-          SI: '#/components/schemas/AllowedCurrenciesForSI'
-          SM: '#/components/schemas/AllowedCurrenciesForSM'
-          CH: '#/components/schemas/AllowedCurrenciesForCH'
-          GP: '#/components/schemas/AllowedCurrenciesForGP'
-          GR: '#/components/schemas/AllowedCurrenciesForGR'
-          PF: '#/components/schemas/AllowedCurrenciesForPF'
-          LI: '#/components/schemas/AllowedCurrenciesForLI'
-          TR: '#/components/schemas/AllowedCurrenciesForTR'
-          CN: '#/components/schemas/AllowedCurrenciesForCN'
-          JP: '#/components/schemas/AllowedCurrenciesForJP'
-          NZ: '#/components/schemas/AllowedCurrenciesForNZ'
-          AE: '#/components/schemas/AllowedCurrenciesForAE'
-          AL: '#/components/schemas/AllowedCurrenciesForAL'
-          BJ: '#/components/schemas/AllowedCurrenciesForBJ'
-          BF: '#/components/schemas/AllowedCurrenciesForBF'
-          CV: '#/components/schemas/AllowedCurrenciesForCV'
-          DJ: '#/components/schemas/AllowedCurrenciesForDJ'
-          FK: '#/components/schemas/AllowedCurrenciesForFK'
-          FJ: '#/components/schemas/AllowedCurrenciesForFJ'
-          KG: '#/components/schemas/AllowedCurrenciesForKG'
-          MG: '#/components/schemas/AllowedCurrenciesForMG'
-          MS: '#/components/schemas/AllowedCurrenciesForMS'
-          PW: '#/components/schemas/AllowedCurrenciesForPW'
-          ST: '#/components/schemas/AllowedCurrenciesForST'
-          MF: '#/components/schemas/AllowedCurrenciesForMF'
-          TW: '#/components/schemas/AllowedCurrenciesForTW'
-          TG: '#/components/schemas/AllowedCurrenciesForTG'
-          TM: '#/components/schemas/AllowedCurrenciesForTM'
-          UG: '#/components/schemas/AllowedCurrenciesForUG'
-          ZM: '#/components/schemas/AllowedCurrenciesForZM'
-          AG: '#/components/schemas/AllowedCurrenciesForAG'
-          BH: '#/components/schemas/AllowedCurrenciesForBH'
-          BZ: '#/components/schemas/AllowedCurrenciesForBZ'
-          BO: '#/components/schemas/AllowedCurrenciesForBO'
-          BN: '#/components/schemas/AllowedCurrenciesForBN'
-          CM: '#/components/schemas/AllowedCurrenciesForCM'
-          CR: '#/components/schemas/AllowedCurrenciesForCR'
-          GF: '#/components/schemas/AllowedCurrenciesForGF'
-          GE: '#/components/schemas/AllowedCurrenciesForGE'
-          GD: '#/components/schemas/AllowedCurrenciesForGD'
-          IL: '#/components/schemas/AllowedCurrenciesForIL'
-          JO: '#/components/schemas/AllowedCurrenciesForJO'
-          KW: '#/components/schemas/AllowedCurrenciesForKW'
-          MK: '#/components/schemas/AllowedCurrenciesForMK'
-          MV: '#/components/schemas/AllowedCurrenciesForMV'
-          ME: '#/components/schemas/AllowedCurrenciesForME'
-          NA: '#/components/schemas/AllowedCurrenciesForNA'
-          SC: '#/components/schemas/AllowedCurrenciesForSC'
-          LC: '#/components/schemas/AllowedCurrenciesForLC'
-          SZ: '#/components/schemas/AllowedCurrenciesForSZ'
-          AM: '#/components/schemas/AllowedCurrenciesForAM'
-          AZ: '#/components/schemas/AllowedCurrenciesForAZ'
-          BB: '#/components/schemas/AllowedCurrenciesForBB'
-          BM: '#/components/schemas/AllowedCurrenciesForBM'
-          KY: '#/components/schemas/AllowedCurrenciesForKY'
-          DM: '#/components/schemas/AllowedCurrenciesForDM'
-          GA: '#/components/schemas/AllowedCurrenciesForGA'
-          JM: '#/components/schemas/AllowedCurrenciesForJM'
-          KE: '#/components/schemas/AllowedCurrenciesForKE'
-          MW: '#/components/schemas/AllowedCurrenciesForMW'
-          MR: '#/components/schemas/AllowedCurrenciesForMR'
-          MA: '#/components/schemas/AllowedCurrenciesForMA'
-          PG: '#/components/schemas/AllowedCurrenciesForPG'
-          QA: '#/components/schemas/AllowedCurrenciesForQA'
-          SA: '#/components/schemas/AllowedCurrenciesForSA'
-          SB: '#/components/schemas/AllowedCurrenciesForSB'
-          SH: '#/components/schemas/AllowedCurrenciesForSH'
-          VC: '#/components/schemas/AllowedCurrenciesForVC'
-          TJ: '#/components/schemas/AllowedCurrenciesForTJ'
-          TO: '#/components/schemas/AllowedCurrenciesForTO'
-          TC: '#/components/schemas/AllowedCurrenciesForTC'
-          UZ: '#/components/schemas/AllowedCurrenciesForUZ'
-          AI: '#/components/schemas/AllowedCurrenciesForAI'
-          AW: '#/components/schemas/AllowedCurrenciesForAW'
-          BS: '#/components/schemas/AllowedCurrenciesForBS'
-          BT: '#/components/schemas/AllowedCurrenciesForBT'
-          DO: '#/components/schemas/AllowedCurrenciesForDO'
-          SV: '#/components/schemas/AllowedCurrenciesForSV'
-          GM: '#/components/schemas/AllowedCurrenciesForGM'
-          HN: '#/components/schemas/AllowedCurrenciesForHN'
-          LS: '#/components/schemas/AllowedCurrenciesForLS'
-          MO: '#/components/schemas/AllowedCurrenciesForMO'
-          MU: '#/components/schemas/AllowedCurrenciesForMU'
-          MN: '#/components/schemas/AllowedCurrenciesForMN'
-          MZ: '#/components/schemas/AllowedCurrenciesForMZ'
-          NI: '#/components/schemas/AllowedCurrenciesForNI'
-          OM: '#/components/schemas/AllowedCurrenciesForOM'
-          PY: '#/components/schemas/AllowedCurrenciesForPY'
-          SN: '#/components/schemas/AllowedCurrenciesForSN'
-          ZA: '#/components/schemas/AllowedCurrenciesForZA'
-          KN: '#/components/schemas/AllowedCurrenciesForKN'
-          SR: '#/components/schemas/AllowedCurrenciesForSR'
-          TZ: '#/components/schemas/AllowedCurrenciesForTZ'
-          TT: '#/components/schemas/AllowedCurrenciesForTT'
-          TV: '#/components/schemas/AllowedCurrenciesForTV'
-          VG: '#/components/schemas/AllowedCurrenciesForVG'
-          FM: '#/components/schemas/AllowedCurrenciesForFM'
-          MH: '#/components/schemas/AllowedCurrenciesForMH'
-          AN: '#/components/schemas/AllowedCurrenciesForAN'
-          CW: '#/components/schemas/AllowedCurrenciesForCW'
-          TL: '#/components/schemas/AllowedCurrenciesForTL'
-          MP: '#/components/schemas/AllowedCurrenciesForMP'
-          PR: '#/components/schemas/AllowedCurrenciesForPR'
-          SX: '#/components/schemas/AllowedCurrenciesForSX'
-          VI: '#/components/schemas/AllowedCurrenciesForVI'
-          MD: '#/components/schemas/AllowedCurrenciesForMD'
-          PS: '#/components/schemas/AllowedCurrenciesForPS'
-          BQ: '#/components/schemas/AllowedCurrenciesForBQ'
-          CX: '#/components/schemas/AllowedCurrenciesForCX'
-          ET: '#/components/schemas/AllowedCurrenciesForET'
-          GT: '#/components/schemas/AllowedCurrenciesForGT'
-          NE: '#/components/schemas/AllowedCurrenciesForNE'
-          AO: '#/components/schemas/AllowedCurrenciesForAO'
-          AQ: '#/components/schemas/AllowedCurrenciesForAQ'
-          TD: '#/components/schemas/AllowedCurrenciesForTD'
-          KM: '#/components/schemas/AllowedCurrenciesForKM'
-          FX: '#/components/schemas/AllowedCurrenciesForFX'
-          HM: '#/components/schemas/AllowedCurrenciesForHM'
-          LA: '#/components/schemas/AllowedCurrenciesForLA'
-          LR: '#/components/schemas/AllowedCurrenciesForLR'
-          RS: '#/components/schemas/AllowedCurrenciesForRS'
-          SJ: '#/components/schemas/AllowedCurrenciesForSJ'
-          TN: '#/components/schemas/AllowedCurrenciesForTN'
-          CG: '#/components/schemas/AllowedCurrenciesForCG'
-          NU: '#/components/schemas/AllowedCurrenciesForNU'
-          WS: '#/components/schemas/AllowedCurrenciesForWS'
-          EH: '#/components/schemas/AllowedCurrenciesForEH'
-          IO: '#/components/schemas/AllowedCurrenciesForIO'
-          EG: '#/components/schemas/AllowedCurrenciesForEG'
-          GH: '#/components/schemas/AllowedCurrenciesForGH'
-          GN: '#/components/schemas/AllowedCurrenciesForGN'
-          NF: '#/components/schemas/AllowedCurrenciesForNF'
-          PN: '#/components/schemas/AllowedCurrenciesForPN'
-          SL: '#/components/schemas/AllowedCurrenciesForSL'
-          GS: '#/components/schemas/AllowedCurrenciesForGS'
-          UA: '#/components/schemas/AllowedCurrenciesForUA'
-          DZ: '#/components/schemas/AllowedCurrenciesForDZ'
-          BW: '#/components/schemas/AllowedCurrenciesForBW'
-          BV: '#/components/schemas/AllowedCurrenciesForBV'
-          KH: '#/components/schemas/AllowedCurrenciesForKH'
-          CC: '#/components/schemas/AllowedCurrenciesForCC'
-          CK: '#/components/schemas/AllowedCurrenciesForCK'
-          GQ: '#/components/schemas/AllowedCurrenciesForGQ'
-          GY: '#/components/schemas/AllowedCurrenciesForGY'
-          NG: '#/components/schemas/AllowedCurrenciesForNG'
-          RW: '#/components/schemas/AllowedCurrenciesForRW'
-          PM: '#/components/schemas/AllowedCurrenciesForPM'
-          TF: '#/components/schemas/AllowedCurrenciesForTF'
-          KI: '#/components/schemas/AllowedCurrenciesForKI'
-          GL: '#/components/schemas/AllowedCurrenciesForGL'
-          NR: '#/components/schemas/AllowedCurrenciesForNR'
-          UM: '#/components/schemas/AllowedCurrenciesForUM'
-          TK: '#/components/schemas/AllowedCurrenciesForTK'
-          XK: '#/components/schemas/AllowedCurrenciesForXK'
-          AS: '#/components/schemas/AllowedCurrenciesForAS'
-          CI: '#/components/schemas/AllowedCurrenciesForCI'
-          CD: '#/components/schemas/AllowedCurrenciesForCD'
-          ML: '#/components/schemas/AllowedCurrenciesForML'
-          PA: '#/components/schemas/AllowedCurrenciesForPA'
-          VE: '#/components/schemas/AllowedCurrenciesForVE'
-          HT: '#/components/schemas/AllowedCurrenciesForHT'
-          VU: '#/components/schemas/AllowedCurrenciesForVU'
-          GU: '#/components/schemas/AllowedCurrenciesForGU'
-          ZW: '#/components/schemas/AllowedCurrenciesForZW'
-          LB: '#/components/schemas/AllowedCurrenciesForLB'
+          au: '#/components/schemas/AllowedCurrenciesForAU'
+          id: '#/components/schemas/AllowedCurrenciesForID'
+          in: '#/components/schemas/AllowedCurrenciesForIN'
+          gb: '#/components/schemas/AllowedCurrenciesForGB'
+          im: '#/components/schemas/AllowedCurrenciesForIM'
+          gg: '#/components/schemas/AllowedCurrenciesForGG'
+          je: '#/components/schemas/AllowedCurrenciesForJE'
+          gi: '#/components/schemas/AllowedCurrenciesForGI'
+          my: '#/components/schemas/AllowedCurrenciesForMY'
+          th: '#/components/schemas/AllowedCurrenciesForTH'
+          us: '#/components/schemas/AllowedCurrenciesForUS'
+          ec: '#/components/schemas/AllowedCurrenciesForEC'
+          vn: '#/components/schemas/AllowedCurrenciesForVN'
+          np: '#/components/schemas/AllowedCurrenciesForNP'
+          sg: '#/components/schemas/AllowedCurrenciesForSG'
+          hk: '#/components/schemas/AllowedCurrenciesForHK'
+          bd: '#/components/schemas/AllowedCurrenciesForBD'
+          lk: '#/components/schemas/AllowedCurrenciesForLK'
+          ar: '#/components/schemas/AllowedCurrenciesForAR'
+          kr: '#/components/schemas/AllowedCurrenciesForKR'
+          pk: '#/components/schemas/AllowedCurrenciesForPK'
+          br: '#/components/schemas/AllowedCurrenciesForBR'
+          cl: '#/components/schemas/AllowedCurrenciesForCL'
+          co: '#/components/schemas/AllowedCurrenciesForCO'
+          pe: '#/components/schemas/AllowedCurrenciesForPE'
+          uy: '#/components/schemas/AllowedCurrenciesForUY'
+          ca: '#/components/schemas/AllowedCurrenciesForCA'
+          ee: '#/components/schemas/AllowedCurrenciesForEE'
+          be: '#/components/schemas/AllowedCurrenciesForBE'
+          bg: '#/components/schemas/AllowedCurrenciesForBG'
+          mt: '#/components/schemas/AllowedCurrenciesForMT'
+          lt: '#/components/schemas/AllowedCurrenciesForLT'
+          lv: '#/components/schemas/AllowedCurrenciesForLV'
+          fr: '#/components/schemas/AllowedCurrenciesForFR'
+          es: '#/components/schemas/AllowedCurrenciesForES'
+          cy: '#/components/schemas/AllowedCurrenciesForCY'
+          cz: '#/components/schemas/AllowedCurrenciesForCZ'
+          sk: '#/components/schemas/AllowedCurrenciesForSK'
+          pl: '#/components/schemas/AllowedCurrenciesForPL'
+          ie: '#/components/schemas/AllowedCurrenciesForIE'
+          nl: '#/components/schemas/AllowedCurrenciesForNL'
+          de: '#/components/schemas/AllowedCurrenciesForDE'
+          pt: '#/components/schemas/AllowedCurrenciesForPT'
+          dk: '#/components/schemas/AllowedCurrenciesForDK'
+          lu: '#/components/schemas/AllowedCurrenciesForLU'
+          hr: '#/components/schemas/AllowedCurrenciesForHR'
+          hu: '#/components/schemas/AllowedCurrenciesForHU'
+          mc: '#/components/schemas/AllowedCurrenciesForMC'
+          yt: '#/components/schemas/AllowedCurrenciesForYT'
+          ad: '#/components/schemas/AllowedCurrenciesForAD'
+          mq: '#/components/schemas/AllowedCurrenciesForMQ'
+          is: '#/components/schemas/AllowedCurrenciesForIS'
+          it: '#/components/schemas/AllowedCurrenciesForIT'
+          va: '#/components/schemas/AllowedCurrenciesForVA'
+          re: '#/components/schemas/AllowedCurrenciesForRE'
+          at: '#/components/schemas/AllowedCurrenciesForAT'
+          nc: '#/components/schemas/AllowedCurrenciesForNC'
+          ro: '#/components/schemas/AllowedCurrenciesForRO'
+          "no": '#/components/schemas/AllowedCurrenciesForNO'
+          fi: '#/components/schemas/AllowedCurrenciesForFI'
+          wf: '#/components/schemas/AllowedCurrenciesForWF'
+          se: '#/components/schemas/AllowedCurrenciesForSE'
+          si: '#/components/schemas/AllowedCurrenciesForSI'
+          sm: '#/components/schemas/AllowedCurrenciesForSM'
+          ch: '#/components/schemas/AllowedCurrenciesForCH'
+          gp: '#/components/schemas/AllowedCurrenciesForGP'
+          gr: '#/components/schemas/AllowedCurrenciesForGR'
+          pf: '#/components/schemas/AllowedCurrenciesForPF'
+          li: '#/components/schemas/AllowedCurrenciesForLI'
+          tr: '#/components/schemas/AllowedCurrenciesForTR'
+          cn: '#/components/schemas/AllowedCurrenciesForCN'
+          jp: '#/components/schemas/AllowedCurrenciesForJP'
+          nz: '#/components/schemas/AllowedCurrenciesForNZ'
+          ae: '#/components/schemas/AllowedCurrenciesForAE'
+          al: '#/components/schemas/AllowedCurrenciesForAL'
+          bj: '#/components/schemas/AllowedCurrenciesForBJ'
+          bf: '#/components/schemas/AllowedCurrenciesForBF'
+          cv: '#/components/schemas/AllowedCurrenciesForCV'
+          dj: '#/components/schemas/AllowedCurrenciesForDJ'
+          fk: '#/components/schemas/AllowedCurrenciesForFK'
+          fj: '#/components/schemas/AllowedCurrenciesForFJ'
+          kg: '#/components/schemas/AllowedCurrenciesForKG'
+          mg: '#/components/schemas/AllowedCurrenciesForMG'
+          mx: '#/components/schemas/AllowedCurrenciesForMX'
+          ms: '#/components/schemas/AllowedCurrenciesForMS'
+          pw: '#/components/schemas/AllowedCurrenciesForPW'
+          ph: '#/components/schemas/AllowedCurrenciesForPH'
+          st: '#/components/schemas/AllowedCurrenciesForST'
+          mf: '#/components/schemas/AllowedCurrenciesForMF'
+          tw: '#/components/schemas/AllowedCurrenciesForTW'
+          tg: '#/components/schemas/AllowedCurrenciesForTG'
+          tm: '#/components/schemas/AllowedCurrenciesForTM'
+          ug: '#/components/schemas/AllowedCurrenciesForUG'
+          zm: '#/components/schemas/AllowedCurrenciesForZM'
+          ag: '#/components/schemas/AllowedCurrenciesForAG'
+          bh: '#/components/schemas/AllowedCurrenciesForBH'
+          bz: '#/components/schemas/AllowedCurrenciesForBZ'
+          bo: '#/components/schemas/AllowedCurrenciesForBO'
+          bn: '#/components/schemas/AllowedCurrenciesForBN'
+          cm: '#/components/schemas/AllowedCurrenciesForCM'
+          cr: '#/components/schemas/AllowedCurrenciesForCR'
+          gf: '#/components/schemas/AllowedCurrenciesForGF'
+          ge: '#/components/schemas/AllowedCurrenciesForGE'
+          gd: '#/components/schemas/AllowedCurrenciesForGD'
+          il: '#/components/schemas/AllowedCurrenciesForIL'
+          jo: '#/components/schemas/AllowedCurrenciesForJO'
+          kw: '#/components/schemas/AllowedCurrenciesForKW'
+          mk: '#/components/schemas/AllowedCurrenciesForMK'
+          mv: '#/components/schemas/AllowedCurrenciesForMV'
+          me: '#/components/schemas/AllowedCurrenciesForME'
+          na: '#/components/schemas/AllowedCurrenciesForNA'
+          sc: '#/components/schemas/AllowedCurrenciesForSC'
+          lc: '#/components/schemas/AllowedCurrenciesForLC'
+          sz: '#/components/schemas/AllowedCurrenciesForSZ'
+          am: '#/components/schemas/AllowedCurrenciesForAM'
+          az: '#/components/schemas/AllowedCurrenciesForAZ'
+          bb: '#/components/schemas/AllowedCurrenciesForBB'
+          bm: '#/components/schemas/AllowedCurrenciesForBM'
+          ky: '#/components/schemas/AllowedCurrenciesForKY'
+          dm: '#/components/schemas/AllowedCurrenciesForDM'
+          ga: '#/components/schemas/AllowedCurrenciesForGA'
+          jm: '#/components/schemas/AllowedCurrenciesForJM'
+          ke: '#/components/schemas/AllowedCurrenciesForKE'
+          mw: '#/components/schemas/AllowedCurrenciesForMW'
+          mr: '#/components/schemas/AllowedCurrenciesForMR'
+          ma: '#/components/schemas/AllowedCurrenciesForMA'
+          pg: '#/components/schemas/AllowedCurrenciesForPG'
+          qa: '#/components/schemas/AllowedCurrenciesForQA'
+          sa: '#/components/schemas/AllowedCurrenciesForSA'
+          sb: '#/components/schemas/AllowedCurrenciesForSB'
+          sh: '#/components/schemas/AllowedCurrenciesForSH'
+          vc: '#/components/schemas/AllowedCurrenciesForVC'
+          tj: '#/components/schemas/AllowedCurrenciesForTJ'
+          to: '#/components/schemas/AllowedCurrenciesForTO'
+          tc: '#/components/schemas/AllowedCurrenciesForTC'
+          uz: '#/components/schemas/AllowedCurrenciesForUZ'
+          ai: '#/components/schemas/AllowedCurrenciesForAI'
+          aw: '#/components/schemas/AllowedCurrenciesForAW'
+          bs: '#/components/schemas/AllowedCurrenciesForBS'
+          bt: '#/components/schemas/AllowedCurrenciesForBT'
+          do: '#/components/schemas/AllowedCurrenciesForDO'
+          sv: '#/components/schemas/AllowedCurrenciesForSV'
+          gm: '#/components/schemas/AllowedCurrenciesForGM'
+          hn: '#/components/schemas/AllowedCurrenciesForHN'
+          ls: '#/components/schemas/AllowedCurrenciesForLS'
+          mo: '#/components/schemas/AllowedCurrenciesForMO'
+          mu: '#/components/schemas/AllowedCurrenciesForMU'
+          mn: '#/components/schemas/AllowedCurrenciesForMN'
+          mz: '#/components/schemas/AllowedCurrenciesForMZ'
+          ni: '#/components/schemas/AllowedCurrenciesForNI'
+          om: '#/components/schemas/AllowedCurrenciesForOM'
+          py: '#/components/schemas/AllowedCurrenciesForPY'
+          sn: '#/components/schemas/AllowedCurrenciesForSN'
+          za: '#/components/schemas/AllowedCurrenciesForZA'
+          kn: '#/components/schemas/AllowedCurrenciesForKN'
+          sr: '#/components/schemas/AllowedCurrenciesForSR'
+          tz: '#/components/schemas/AllowedCurrenciesForTZ'
+          tt: '#/components/schemas/AllowedCurrenciesForTT'
+          tv: '#/components/schemas/AllowedCurrenciesForTV'
+          vg: '#/components/schemas/AllowedCurrenciesForVG'
+          fm: '#/components/schemas/AllowedCurrenciesForFM'
+          mh: '#/components/schemas/AllowedCurrenciesForMH'
+          an: '#/components/schemas/AllowedCurrenciesForAN'
+          cw: '#/components/schemas/AllowedCurrenciesForCW'
+          tl: '#/components/schemas/AllowedCurrenciesForTL'
+          mp: '#/components/schemas/AllowedCurrenciesForMP'
+          pr: '#/components/schemas/AllowedCurrenciesForPR'
+          sx: '#/components/schemas/AllowedCurrenciesForSX'
+          vi: '#/components/schemas/AllowedCurrenciesForVI'
+          md: '#/components/schemas/AllowedCurrenciesForMD'
+          ps: '#/components/schemas/AllowedCurrenciesForPS'
+          bq: '#/components/schemas/AllowedCurrenciesForBQ'
+          cx: '#/components/schemas/AllowedCurrenciesForCX'
+          et: '#/components/schemas/AllowedCurrenciesForET'
+          gt: '#/components/schemas/AllowedCurrenciesForGT'
+          ne: '#/components/schemas/AllowedCurrenciesForNE'
+          ao: '#/components/schemas/AllowedCurrenciesForAO'
+          aq: '#/components/schemas/AllowedCurrenciesForAQ'
+          td: '#/components/schemas/AllowedCurrenciesForTD'
+          km: '#/components/schemas/AllowedCurrenciesForKM'
+          fx: '#/components/schemas/AllowedCurrenciesForFX'
+          hm: '#/components/schemas/AllowedCurrenciesForHM'
+          la: '#/components/schemas/AllowedCurrenciesForLA'
+          lr: '#/components/schemas/AllowedCurrenciesForLR'
+          rs: '#/components/schemas/AllowedCurrenciesForRS'
+          sj: '#/components/schemas/AllowedCurrenciesForSJ'
+          tn: '#/components/schemas/AllowedCurrenciesForTN'
+          cg: '#/components/schemas/AllowedCurrenciesForCG'
+          nu: '#/components/schemas/AllowedCurrenciesForNU'
+          ws: '#/components/schemas/AllowedCurrenciesForWS'
+          eh: '#/components/schemas/AllowedCurrenciesForEH'
+          io: '#/components/schemas/AllowedCurrenciesForIO'
+          eg: '#/components/schemas/AllowedCurrenciesForEG'
+          gh: '#/components/schemas/AllowedCurrenciesForGH'
+          gn: '#/components/schemas/AllowedCurrenciesForGN'
+          nf: '#/components/schemas/AllowedCurrenciesForNF'
+          pn: '#/components/schemas/AllowedCurrenciesForPN'
+          sl: '#/components/schemas/AllowedCurrenciesForSL'
+          gs: '#/components/schemas/AllowedCurrenciesForGS'
+          ua: '#/components/schemas/AllowedCurrenciesForUA'
+          dz: '#/components/schemas/AllowedCurrenciesForDZ'
+          bw: '#/components/schemas/AllowedCurrenciesForBW'
+          bv: '#/components/schemas/AllowedCurrenciesForBV'
+          kh: '#/components/schemas/AllowedCurrenciesForKH'
+          cc: '#/components/schemas/AllowedCurrenciesForCC'
+          ck: '#/components/schemas/AllowedCurrenciesForCK'
+          gq: '#/components/schemas/AllowedCurrenciesForGQ'
+          gy: '#/components/schemas/AllowedCurrenciesForGY'
+          ng: '#/components/schemas/AllowedCurrenciesForNG'
+          rw: '#/components/schemas/AllowedCurrenciesForRW'
+          pm: '#/components/schemas/AllowedCurrenciesForPM'
+          tf: '#/components/schemas/AllowedCurrenciesForTF'
+          ki: '#/components/schemas/AllowedCurrenciesForKI'
+          gl: '#/components/schemas/AllowedCurrenciesForGL'
+          nr: '#/components/schemas/AllowedCurrenciesForNR'
+          um: '#/components/schemas/AllowedCurrenciesForUM'
+          tk: '#/components/schemas/AllowedCurrenciesForTK'
+          xk: '#/components/schemas/AllowedCurrenciesForXK'
+          as: '#/components/schemas/AllowedCurrenciesForAS'
+          ci: '#/components/schemas/AllowedCurrenciesForCI'
+          cd: '#/components/schemas/AllowedCurrenciesForCD'
+          ml: '#/components/schemas/AllowedCurrenciesForML'
+          pa: '#/components/schemas/AllowedCurrenciesForPA'
+          ve: '#/components/schemas/AllowedCurrenciesForVE'
+          ht: '#/components/schemas/AllowedCurrenciesForHT'
+          vu: '#/components/schemas/AllowedCurrenciesForVU'
+          gu: '#/components/schemas/AllowedCurrenciesForGU'
+          zw: '#/components/schemas/AllowedCurrenciesForZW'
+          lb: '#/components/schemas/AllowedCurrenciesForLB'
       oneOf:
       - $ref: '#/components/schemas/AllowedCurrenciesForKR'
       - $ref: '#/components/schemas/AllowedCurrenciesForZM'
