@@ -23,6 +23,9 @@ components:
       enum:
         - individual
         - business
+      x-enum-varnames:
+        - individual
+        - business
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryBaseDetails:
       type: object
@@ -117,6 +120,9 @@ components:
       enum:
         - phone
         - email
+      x-enum-varnames:
+        - phone
+        - email
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryChannel:
       type: object
@@ -133,6 +139,9 @@ components:
       type: string
       description: A possible values of a beneficiary's channel type.
       enum:
+        - hosted
+        - api
+      x-enum-varnames:
         - hosted
         - api
       x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
