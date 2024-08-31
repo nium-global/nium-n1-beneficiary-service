@@ -301,33 +301,33 @@ components:
       type: string
       description: A possible value of proxy payment account type.
       enum:
-      - mobile
-      - uen
-      - nric
-      - vpa
-      - id
-      - email
-      - random_key
-      - abn
-      - passport
-      - corporate_registration_number
-      - army_id
-      - fps_id
-      - organisation_id
-    x-enum-varnames:
-      - mobile
-      - uen
-      - nric
-      - vpa
-      - id
-      - email
-      - random_key
-      - abn
-      - passport
-      - corporate_registration_number
-      - army_id
-      - fps_id
-      - organisation_id
+        - mobile
+        - uen
+        - nric
+        - vpa
+        - id
+        - email
+        - random_key
+        - abn
+        - passport
+        - corporate_registration_number
+        - army_id
+        - fps_id
+        - organisation_id
+      x-enum-varnames:
+        - mobile
+        - uen
+        - nric
+        - vpa
+        - id
+        - email
+        - random_key
+        - abn
+        - passport
+        - corporate_registration_number
+        - army_id
+        - fps_id
+        - organisation_id
     ProxyValue:
       pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
       type: string
