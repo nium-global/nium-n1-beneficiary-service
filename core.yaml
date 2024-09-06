@@ -17,6 +17,9 @@ servers:
 paths: {}
 components:
   schemas:
+    Verified:
+      type: boolean
+      default: false
     CountryCode:
       pattern: "^[a-z]{2}$"
       type: string
