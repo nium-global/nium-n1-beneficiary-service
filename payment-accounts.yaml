@@ -46,17 +46,6 @@ components:
           type: boolean
           default: false
       description: An auto sweep attribute of a payment account.
-    OwnerContactNumber:
-      required:
-      - number
-      type: object
-      properties:
-        number:
-          $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/ContactNumber
-        verified:
-          type: boolean
-          default: false
-      description: An owner's contact number details.
     OwnerIdentification:
       type: object
       properties:
