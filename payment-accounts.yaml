@@ -48,6 +48,9 @@ components:
       description: An auto sweep attribute of a payment account.
     OwnerIdentification:
       type: object
+      required:
+        - type
+        - value
       properties:
         type:
           $ref: '#/components/schemas/OwnerIdentificationType'
