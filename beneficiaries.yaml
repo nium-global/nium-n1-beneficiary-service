@@ -26,11 +26,12 @@ components:
       x-enum-varnames:
         - individual
         - business
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryBaseDetails:
       type: object
       description: Base details for a beneficiary entity.
       properties:
+        authenticationCode:
+          $ref: './core.yaml#/components/schemas/AuthenticationCode'
         entityType:
           type: string
         name:
@@ -43,13 +44,10 @@ components:
           $ref: '#/components/schemas/BeneficiaryCommunicationPreference'
         remitterBeneficiaryRelationship:
           $ref: '#/components/schemas/RemitterBeneficiaryRelationship'
-        identification:
-          $ref: '#/components/schemas/BeneficiaryIdentification'
       required:
         - entityType
         - email
         - name
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryEntityDetails:
       type: object
       description: A beneficiary entity details.
@@ -61,7 +59,6 @@ components:
       oneOf:
         - $ref: '#/components/schemas/IndividualEntityDetails'
         - $ref: '#/components/schemas/BusinessEntityDetails'
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BusinessEntityDetails:
       allOf:
         - $ref: '#/components/schemas/BeneficiaryBaseDetails'
@@ -75,7 +72,6 @@ components:
               format: date
           required:
             - businessRegistrationNumber
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BusinessRegistrationNumber:
       type: string
       description: A beneficiary's business registration number.
@@ -89,7 +85,6 @@ components:
             dateOfBirth:
               type: string
               format: date
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryEmail:
       required:
         - value
@@ -101,7 +96,6 @@ components:
           type: boolean
           default: false
       description: A beneficiary's contact email details.
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryContactNumber:
       required:
         - number
@@ -113,7 +107,6 @@ components:
           type: boolean
           default: false
       description: A beneficiary's contact number details.
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryCommunicationPreference:
       type: string
       description: A preferred communication channel of a beneficiary.
@@ -123,7 +116,6 @@ components:
       x-enum-varnames:
         - phone
         - email
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryChannel:
       type: object
       properties:
@@ -134,7 +126,6 @@ components:
         ipAddress:
           $ref: ./core.yaml#/components/schemas/IpAddress
       description: A beneficiary's channel object
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     BeneficiaryChannelType:
       type: string
       description: A possible values of a beneficiary's channel type.
@@ -144,29 +135,8 @@ components:
       x-enum-varnames:
         - hosted
         - api
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
-    BeneficiaryIdentification:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/BeneficiaryIdentificationType'
-        value:
-          $ref: '#/components/schemas/BeneficiaryIdentificationValue'
-      description: A beneficiary's identification object.
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
-    BeneficiaryIdentificationType:
-      pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
-      type: string
-      description: A beneficiary's identification type.
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
-    BeneficiaryIdentificationValue:
-      pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
-      type: string
-      description: A beneficiary's identification value.
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
     RemitterBeneficiaryRelationship:
       pattern: "^.[A-Za-z0-9 -.]{1,255}$"
       type: string
       description: A relationship between a remitter and beneficiary in the context
         of the transaction.
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'

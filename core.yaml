@@ -17,6 +17,12 @@ servers:
 paths: {}
 components:
   schemas:
+    AuthenticationCode:
+      type: string
+      description: "This fields accepts the authenticationCode generated as part of\
+        \ SCA(Strong Customer Authentication). Note: Authentication code must be passed\
+        \ if regulatory region of the program is UK or EU and License Entity NIUM.\
+        \ For other region, this field is non-mandatory"
     Verified:
       type: boolean
       default: false
