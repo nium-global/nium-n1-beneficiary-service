@@ -70,12 +70,25 @@ components:
             establishmentDate:
               type: string
               format: date
+            businessType:
+              $ref: '#/components/schemas/BusinessType'
           required:
             - businessRegistrationNumber
+            - businessType
     BusinessRegistrationNumber:
       type: string
       description: A beneficiary's business registration number.
-      x-field-extra-annotation: '@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)'
+    BusinessType:
+      type: string
+      description: This field accepts the type of the business, when the beneficiary is a business.
+      example: partnership
+      enum:
+        - sole_proprietorship
+        - partnership
+        - privately_owned_company
+        - publicly_owned_company
+        - government_owned_entity
+        - financial_institution
     IndividualEntityDetails:
       allOf:
         - $ref: '#/components/schemas/BeneficiaryBaseDetails'
