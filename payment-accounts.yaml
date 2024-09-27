@@ -17,6 +17,10 @@ servers:
 paths: {}
 components:
   schemas:
+    PaymentAccountHashId:
+      type: string
+      pattern: ^[0-9a-fA-F]{24}$|^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+      description: A payment account identifier
     BasePaymentAccount:
       required:
       - paymentMethod
