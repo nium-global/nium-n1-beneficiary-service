@@ -17,6 +17,10 @@ servers:
 paths: {}
 components:
   schemas:
+    BeneficiaryHashId:
+      type: string
+      pattern: ^[0-9a-fA-F]{24}$|^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+      description: A beneficiary identifier
     EntityType:
       type: string
       description: A beneficiary entity type.
