@@ -17,71 +17,62 @@ servers:
 paths: {}
 components:
   schemas:
+    AuthenticationCode:
+      type: string
+      description: "This fields accepts the authenticationCode generated as part of\
+        \ SCA(Strong Customer Authentication). Note: Authentication code must be passed\
+        \ if regulatory region of the program is UK or EU and License Entity NIUM.\
+        \ For other region, this field is non-mandatory"
+    Verified:
+      type: boolean
+      default: false
     CountryCode:
-      title: CountryCode
-      pattern: "^[A-Z]{2}$"
+      pattern: "^[a-z]{2}$"
       type: string
       description: A 2-letter ISO country code.
-      example: US
+      example: us
     CurrencyCode:
-      pattern: "^[a-zA-Z]{3}$"
+      pattern: "^[a-z]{3}$"
       type: string
       description: A 3-letter ISO-4217 currency code.
-      example: USD
+      example: usd
     Email:
-      title: Email
       pattern: "^([a-zA-Z0-9+_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,63})$"
       type: string
       description: An email address
     ContactNumber:
-      title: ContactNumber
       pattern: "^\\+[0-9]{1,17}$"
       type: string
       description: A contact number
       example: "+911234567890"
     PostalCode:
-      title: PostalCode
       pattern: "^[0-9]{0,15}$"
       type: string
       description: An address postal or zip code.
       example: "94560"
     AddressState:
-      title: AddressState
       pattern: "^[A-Za-z0-9\\s-.():_/]{1,50}$"
       type: string
       description: An address state
       example: "California"
     AddressCity:
-      title: AddressCity
       pattern: "^[A-Za-z0-9\\s-.():_/]{1,50}$"
       type: string
       description: An address city
       example: "Newark"
-    AddressType:
-      title: AddressType
-      type: string
-      description: A possible address type
-      default: BILLING
-      enum:
-        - MAILING
-        - BILLING
     CoreApiHashId:
-      title: CoreApiHashId
       type: string
       format: UUID
       example: abc1234-5d6e-0a8b-c8d7-3a7706a0c312
     Name:
-      title: Name
       pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
       type: string
       description: An official name
     Line:
-      title: line
       pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
       type: string
       description: An address line
     Address:
-      title: Address
       required:
         - city
         - countryCode
@@ -90,8 +81,6 @@ components:
         - state
       type: object
       properties:
-        type:
-          $ref: '#/components/schemas/AddressType'
         line1:
           $ref: '#/components/schemas/Line'
         line2:
@@ -105,3 +94,8 @@ components:
         postalCode:
           $ref: '#/components/schemas/PostalCode'
       description: An address details.
+    IpAddress:
+      pattern: "(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((([0-9a-fA-F]){1,4})\\\
+        :){7}([0-9a-fA-F]){1,4}"
+      type: string
+      description: An IP address that can be either IPv4 or IPv6 format.
