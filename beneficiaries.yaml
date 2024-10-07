@@ -48,6 +48,8 @@ components:
           $ref: '#/components/schemas/BeneficiaryCommunicationPreference'
         remitterBeneficiaryRelationship:
           $ref: '#/components/schemas/RemitterBeneficiaryRelationship'
+        nameLocalLanguage:
+          $ref: '#/components/schemas/BeneficiaryNameLocalLanguage'
       required:
         - entityType
         - email
@@ -157,3 +159,7 @@ components:
       type: string
       description: A relationship between a remitter and beneficiary in the context
         of the transaction.
+    BeneficiaryNameLocalLanguage:
+      type: string
+      description: A beneficiary name in the local language.
+      pattern: "^[\\p{L}\\p{N}\\s\\-().:/_]{1,255}$"
