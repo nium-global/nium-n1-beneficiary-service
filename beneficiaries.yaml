@@ -26,10 +26,10 @@ components:
       description: A beneficiary entity type.
       enum:
         - individual
-        - business
+        - corporate
       x-enum-varnames:
         - individual
-        - business
+        - corporate
     BeneficiaryBaseDetails:
       type: object
       description: Base details for a beneficiary entity.
@@ -48,6 +48,8 @@ components:
           $ref: '#/components/schemas/BeneficiaryCommunicationPreference'
         remitterBeneficiaryRelationship:
           $ref: '#/components/schemas/RemitterBeneficiaryRelationship'
+        nameLocalLanguage:
+          $ref: '#/components/schemas/BeneficiaryNameLocalLanguage'
       required:
         - entityType
         - email
@@ -59,7 +61,7 @@ components:
         propertyName: entityType
         mapping:
           individual: '#/components/schemas/IndividualEntityDetails'
-          business: '#/components/schemas/BusinessEntityDetails'
+          corporate: '#/components/schemas/BusinessEntityDetails'
       oneOf:
         - $ref: '#/components/schemas/IndividualEntityDetails'
         - $ref: '#/components/schemas/BusinessEntityDetails'
@@ -157,3 +159,7 @@ components:
       type: string
       description: A relationship between a remitter and beneficiary in the context
         of the transaction.
+    BeneficiaryNameLocalLanguage:
+      type: string
+      description: A beneficiary name in the local language.
+      pattern: "^[\\p{L}\\p{N}\\s\\-().:/_]{1,255}$"
