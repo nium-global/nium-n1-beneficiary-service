@@ -29,7 +29,7 @@ components:
         - corporate
       x-enum-varnames:
         - individual
-        - business
+        - corporate
     BeneficiaryBaseDetails:
       type: object
       description: Base details for a beneficiary entity.
