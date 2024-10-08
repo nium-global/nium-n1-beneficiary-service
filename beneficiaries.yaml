@@ -26,10 +26,10 @@ components:
       description: A beneficiary entity type.
       enum:
         - individual
-        - business
+        - corporate
       x-enum-varnames:
         - individual
-        - business
+        - corporate
     BeneficiaryBaseDetails:
       type: object
       description: Base details for a beneficiary entity.
@@ -61,7 +61,7 @@ components:
         propertyName: entityType
         mapping:
           individual: '#/components/schemas/IndividualEntityDetails'
-          business: '#/components/schemas/BusinessEntityDetails'
+          corporate: '#/components/schemas/BusinessEntityDetails'
       oneOf:
         - $ref: '#/components/schemas/IndividualEntityDetails'
         - $ref: '#/components/schemas/BusinessEntityDetails'
