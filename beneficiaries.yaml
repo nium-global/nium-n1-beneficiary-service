@@ -78,6 +78,10 @@ components:
               format: date
             businessType:
               $ref: '#/components/schemas/BusinessType'
+            contactName:
+              type: string
+              pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
+              description: This field accepts the name of the contact person of the business, applicable when beneficiary is a business.
           required:
             - businessRegistrationNumber
             - businessType
