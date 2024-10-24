@@ -1,0 +1,2477 @@
+openapi: 3.0.3
+info:
+  title: Beneficiary Service - Readme Documentation
+  description: |
+    The APIs to manage Nium client's customer beneficiaries and associated payment and tax-payers.
+  termsOfService: https://www.nium.com
+  contact:
+    name: Beneficiary Service
+    url: https://www.nium.com
+    email: core-dev@nium.com
+  license:
+    name: Copyright (c) 2024 NIUM
+  version: 3.0.0
+servers:
+  - url: https://n1-beneficiary-service.qa.niumops.com/beneficiary-service/
+    description: QA server url
+  - url: https://n1-beneficiary-service.preprod.niumops.com/beneficiary-service/
+    description: PREPROD server url
+security:
+  - BearerAuth: [ ]
+  - ApiKeyAuth: [ ]
+tags:
+  - name: BeneficiaryApplication
+    description: The apis to manage the application to onboard a new beneficiary with
+      its demographic information and associated payment and tax-payers.
+  - name: Beneficiary
+    description: The apis to manage the beneficiary's demographic information and associated
+      payment and tax-payers.
+  - name: PaymentAccounts
+    description: The apis to configure and manage the beneficiary's payment accounts.
+  - name: Validations
+    description: The apis to retrieve beneficiary validation schemas and supported payout
+      corridors information.
+  - name: Test
+    description: Operations related to testing
+paths:
+  /api/v3/beneficiary/token:
+    post:
+      tags:
+        - Beneficiary
+      summary: Get Beneficiary Token V3
+      description: The api generate an authorization token to manage beneficiary and
+        its associated tax-payers and payment accounts.
+      operationId: generateBeneficiaryToken
+      parameters:
+        - $ref: '#/components/parameters/XRequestId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              discriminator:
+                propertyName: grantType
+                mapping:
+                  application: '#/components/schemas/BeneficiaryApplicationTokenRequest'
+                  account: '#/components/schemas/BeneficiaryAccountTokenRequest'
+              oneOf:
+                - $ref: '#/components/schemas/BeneficiaryApplicationTokenRequest'
+                - $ref: '#/components/schemas/BeneficiaryAccountTokenRequest'
+        required: true
+      responses:
+        "200":
+          description: Beneficiary token created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiaryTokenDetails'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "422":
+          $ref: '#/components/responses/UnprocessableInput'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - BearerAuth: [ ] # m2m token.
+      x-info:
+        apiType: external
+  /api/v3/clients/{clientHashId}/customers/{customerHashId}/beneficiaries/application:
+    get:
+      tags:
+        - BeneficiaryApplication
+      summary: Get Beneficiary Onboarding Application Details V3
+      description: The api returns the pending beneficiary onboarding application of a given Nium client's customer.
+      operationId: getBeneficiaryOnboardingApplicationDetails
+      parameters:
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/CustomerHashId'
+        - $ref: '#/components/parameters/XRequestId'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiaryOnboardingApplicationDetails'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - BearerAuth: [ ]
+      x-info:
+        apiType: internal
+    put:
+      tags:
+        - BeneficiaryApplication
+      summary: Update Beneficiary Onboarding Application Details V3
+      description: The api edits the details of a pending beneficiary onboarding application
+        of a client's customer.
+      operationId: updateBeneficiaryOnboardingApplicationDetails
+      parameters:
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/CustomerHashId'
+        - $ref: '#/components/parameters/XRequestId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBeneficiaryApplicationDetailsRequest'
+        required: true
+      responses:
+        "200":
+          description: The beneficiary onboarding application details were updated
+            successfully.
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "422":
+          $ref: '#/components/responses/UnprocessableInput'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - BearerAuth: [ ]
+      x-info:
+        apiType: internal
+  /api/v3/clients/{clientHashId}/customers/{customerHashId}/beneficiaries/application/submit:
+    post:
+      tags:
+        - BeneficiaryApplication
+      summary: Submit Beneficiary Onboarding Application V3
+      description: The api submits a pending beneficiary onboarding application. It
+        will create a beneficiary and its associated payment and/or tax-payer with
+        the details provided in the application.
+      operationId: submitBeneficiaryOnboardingApplication
+      parameters:
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/CustomerHashId'
+        - $ref: '#/components/parameters/XRequestId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitBeneficiaryApplicationRequest'
+      responses:
+        "200":
+          description: Beneficiary created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmitBeneficiaryApplicationResponse'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "422":
+          $ref: '#/components/responses/UnprocessableInput'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - BearerAuth: [ ]
+      x-info:
+        apiType: internal
+  /api/v3/clients/{clientHashId}/customers/{customerHashId}/beneficiaries:
+    get:
+      tags:
+        - Beneficiary
+      summary: Get Beneficiaries V3
+      description: "The api returns all the beneficiaries of a given Nium client's\
+        \ customer. This api can be used to search beneficiary by their name, or configured\
+        \ email addressed."
+      operationId: getBeneficiaries
+      parameters:
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/CustomerHashId'
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/QueryByBeneficiaryName'
+        - $ref: '#/components/parameters/QueryByEmail'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/StartingAfter'
+        - $ref: '#/components/parameters/EndingBefore'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListBeneficiariesResponse'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - ApiKeyAuth: [ ]
+        - BearerAuth: [ ]
+      x-info:
+        apiType: external
+    post:
+      tags:
+        - Beneficiary
+      summary: Add Beneficiary V3
+      description: The api creates a beneficiary for a given client's customer.
+      operationId: addBeneficiaryV3
+      parameters:
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/CustomerHashId'
+        - $ref: '#/components/parameters/XRequestId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryEntityDetails'
+        required: true
+      responses:
+        "200":
+          description: Beneficiary created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiaryDetails'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "422":
+          $ref: '#/components/responses/UnprocessableInput'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - ApiKeyAuth: [ ]
+        - BearerAuth: [ ]
+      x-info:
+        apiType: external
+  /api/v3/clients/{clientHashId}/customers/{customerHashId}/beneficiaries/{beneficiaryHashId}:
+    get:
+      tags:
+        - Beneficiary
+      summary: Get Beneficiary Details V3
+      description: The api returns the details of a given beneficiary of a client's
+        customer.
+      operationId: getBeneficiaryDetails
+      parameters:
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/CustomerHashId'
+        - $ref: '#/components/parameters/BeneficiaryHashId'
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/UnmaskData'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiaryDetails'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - ApiKeyAuth: [ ]
+        - BearerAuth: [ ]
+      x-info:
+        apiType: external
+    put:
+      tags:
+        - Beneficiary
+      summary: Update Beneficiary Details V3
+      description: The api edits the details of a given beneficiary of a client's
+        customer.
+      operationId: updateBeneficiaryDetails
+      parameters:
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/CustomerHashId'
+        - $ref: '#/components/parameters/BeneficiaryHashId'
+        - $ref: '#/components/parameters/XRequestId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBeneficiaryDetailsRequest'
+        required: true
+      responses:
+        "200":
+          description: The beneficiary details were updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiaryDetails'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "422":
+          $ref: '#/components/responses/UnprocessableInput'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - ApiKeyAuth: [ ]
+        - BearerAuth: [ ]
+      x-info:
+        apiType: external
+    delete:
+      tags:
+        - Beneficiary
+      summary: Delete Beneficiary V3
+      description: The api deletes a given beneficiary of a given client's customer.
+      operationId: deleteBeneficiary
+      parameters:
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/CustomerHashId'
+        - $ref: '#/components/parameters/BeneficiaryHashId'
+        - $ref: '#/components/parameters/Reason'
+        - $ref: '#/components/parameters/AuthenticationCode'
+        - $ref: '#/components/parameters/XRequestId'
+      responses:
+        "204":
+          description: The beneficiary was removed successfully.
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "422":
+          $ref: '#/components/responses/UnprocessableInput'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - ApiKeyAuth: [ ]
+        - BearerAuth: [ ]
+      x-info:
+        apiType: external
+  /api/v3/clients/{clientHashId}/customers/{customerHashId}/beneficiaries/{beneficiaryHashId}/payment-accounts:
+    get:
+      tags:
+        - PaymentAccounts
+      summary: Get Payment Accounts V3
+      description: The api returns all the payment accounts associated with a given
+        Nium client's customer beneficiary.
+      operationId: getPaymentAccounts
+      parameters:
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/CustomerHashId'
+        - $ref: '#/components/parameters/BeneficiaryHashId'
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/QueryByPayoutCurrency'
+        - $ref: '#/components/parameters/QueryByPaymentMethod'
+        - $ref: '#/components/parameters/QueryByDefaultPaymentAccount'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/StartingAfter'
+        - $ref: '#/components/parameters/EndingBefore'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListPaymentAccountResponse'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - ApiKeyAuth: [ ]
+        - BearerAuth: [ ]
+      x-info:
+        apiType: external
+    post:
+      tags:
+        - Beneficiary
+      summary: Add Payment Account V3
+      description: The api create and associate a payment account with a beneficiary
+        of a given client's customer.
+      operationId: addPaymentAccount
+      parameters:
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/CustomerHashId'
+        - $ref: '#/components/parameters/BeneficiaryHashId'
+        - $ref: '#/components/parameters/XRequestId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/PaymentAccountDetails'
+        required: true
+      responses:
+        "200":
+          description: Payment account added successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAccountInfo'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "422":
+          $ref: '#/components/responses/UnprocessableInput'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - ApiKeyAuth: [ ]
+        - BearerAuth: [ ]
+      x-info:
+        apiType: external
+  /api/v3/clients/{clientHashId}/customers/{customerHashId}/beneficiaries/{beneficiaryHashId}/payment-accounts/{paymentAccountHashId}:
+    get:
+      tags:
+        - PaymentAccounts
+      summary: Get Payment Account Details V3
+      description: The api returns the details of a given payment account of a beneficiary.
+      operationId: getPaymentAccountDetails
+      parameters:
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/CustomerHashId'
+        - $ref: '#/components/parameters/BeneficiaryHashId'
+        - $ref: '#/components/parameters/PaymentAccountHashId'
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/UnmaskData'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAccountInfo'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - ApiKeyAuth: [ ]
+        - BearerAuth: [ ]
+      x-info:
+        apiType: external
+    put:
+      tags:
+        - PaymentAccounts
+      summary: Update Payment Account Details V3
+      description: The api updates the payment account details of a given beneficiary.
+      operationId: updatePaymentAccountDetails
+      parameters:
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/CustomerHashId'
+        - $ref: '#/components/parameters/BeneficiaryHashId'
+        - $ref: '#/components/parameters/PaymentAccountHashId'
+        - $ref: '#/components/parameters/XRequestId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/PaymentAccountDetails'
+        required: true
+      responses:
+        "200":
+          description: The payment account details were updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAccountInfo'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "422":
+          $ref: '#/components/responses/UnprocessableInput'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - ApiKeyAuth: [ ]
+        - BearerAuth: [ ]
+      x-info:
+        apiType: external
+    delete:
+      tags:
+        - Beneficiary
+      summary: Remove Payment Account V3
+      description: The api deletes and remove the payment account associated with a given beneficiary.
+      operationId: removePaymentAccount
+      parameters:
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/CustomerHashId'
+        - $ref: '#/components/parameters/BeneficiaryHashId'
+        - $ref: '#/components/parameters/PaymentAccountHashId'
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/AuthenticationCode'
+      responses:
+        "204":
+          description: The beneficiary payment account was removed successfully.
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "422":
+          $ref: '#/components/responses/UnprocessableInput'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - ApiKeyAuth: [ ]
+        - BearerAuth: [ ]
+      x-info:
+        apiType: external
+  /api/v3/clients/{clientHashId}/customers/{customerHashId}/beneficiaries/{beneficiaryHashId}/tax-payers:
+    post:
+      tags:
+        - Beneficiary
+      summary: Add tax-payer V3
+      description: The api create and associate a tax-payer with a beneficiary of a given client's customer.
+      operationId: addTaxPayer
+      parameters:
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/CustomerHashId'
+        - $ref: '#/components/parameters/BeneficiaryHashId'
+        - $ref: '#/components/parameters/XRequestId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddTaxPayerRequest'
+        required: true
+      responses:
+        "200":
+          description: The tax-payer is associated with beneficiary successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxServicePayerAndFormInfo'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "422":
+          $ref: '#/components/responses/UnprocessableInput'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - ApiKeyAuth: [ ]
+        - BearerAuth: [ ]
+      x-info:
+        apiType: external
+    delete:
+      tags:
+        - Beneficiary
+      summary: Remove tax-payer V3
+      description: The api removes the tax-payer associated with a given beneficiary.
+      operationId: removeTaxPayer
+      parameters:
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/CustomerHashId'
+        - $ref: '#/components/parameters/BeneficiaryHashId'
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/AuthenticationCode'
+        - $ref: '#/components/parameters/DeleteTaxPayerReason'
+      responses:
+        "200":
+          description: The tax-payer was disassociated from beneficiary successfully.
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "422":
+          $ref: '#/components/responses/UnprocessableInput'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - ApiKeyAuth: [ ]
+        - BearerAuth: [ ]
+      x-info:
+        apiType: external
+  /api/v3/beneficiaries/{beneficiaryHashId}:
+    get:
+      tags:
+        - Beneficiary
+      summary: Get Beneficiary Details V3 - Internal
+      description: The api returns the details of a given beneficiary of a client's
+        customer.
+      operationId: getBeneficiaryDetailsInt
+      parameters:
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/BeneficiaryHashId'
+        - $ref: '#/components/parameters/UnmaskData'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiaryDetails'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - BearerAuth: [ ]
+      x-info:
+        apiType: internal
+  /api/v3/payment-accounts/{paymentAccountHashId}:
+    get:
+      tags:
+        - PaymentAccounts
+      summary: Get Payment Account Details V3
+      description: The api returns the details of a given payment account of a beneficiary.
+      operationId: getPaymentAccountDetailsInt
+      parameters:
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/PaymentAccountHashId'
+        - $ref: '#/components/parameters/UnmaskData'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentAccountInfo'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - BearerAuth: [ ]
+      x-info:
+        apiType: internal
+  /api/v3/clients/{clientHashId}/supported-corridors:
+    get:
+      tags:
+        - Validations
+      summary: Get Supported Corridors V3
+      description: The api retrieves the supported corridors for the given client.
+      operationId: getSupportedCorridors
+      parameters:
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/QueryByBeneficiaryEntityType'
+        - $ref: '#/components/parameters/QueryByCustomerType'
+        - $ref: '#/components/parameters/QueryByPayoutCountry'
+        - $ref: '#/components/parameters/QueryByPayoutCurrency'
+        - $ref: '#/components/parameters/QueryByPaymentMethod'
+        - $ref: '#/components/parameters/QueryByRoutingCodeType'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/SortOrder'
+        - $ref: '#/components/parameters/Page'
+      responses:
+        "200":
+          description: Supported corridors details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportedCorridorsResponse'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - BearerAuth: [ ]
+      x-info:
+        apiType: internal
+  /api/v3/clients/{clientHashId}/customers/{customerHashId}/payout-currency/{payoutCurrency}/validation-schemas:
+    get:
+      tags:
+        - Validations
+      summary: Get Validation Schemas V3
+      description: The api returns the validation schemas for beneficiary and payment
+        validation.
+      operationId: getValidationSchemas
+      parameters:
+        - $ref: '#/components/parameters/ClientHashId'
+        - $ref: '#/components/parameters/CustomerHashId'
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/PayoutCurrency'
+        - $ref: '#/components/parameters/QueryByPaymentMethod'
+        - $ref: '#/components/parameters/QueryByPayoutCountry'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationSchemaDetails'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - ApiKeyAuth: [ ]
+        - BearerAuth: [ ]
+      x-info:
+        apiType: internal
+  /api/v1/test/infrastructure:
+    get:
+      tags:
+        - Test
+      summary: Test Beneficiary Service Infra
+      description: The API tests the beneficiary service infrastructure
+      operationId: testBeneficiaryServiceInfraSetup
+      parameters:
+        - $ref: '#/components/parameters/XRequestId'
+      responses:
+        "200":
+          description: Test Beneficiary Service Infrastructure Setup Successful
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - BearerAuth: [ ]
+      x-info:
+        apiType: internal
+  /api/v1/jobs/schemas/{schemaType}/generate:
+    post:
+      tags:
+        - Jobs
+      summary: Generate OpenAPI Schemas By Type
+      description: The API generates the OpenAPI schemas associated with a given type.
+      operationId: generateSchemas
+      parameters:
+        - $ref: '#/components/parameters/SchemaType'
+        - $ref: '#/components/parameters/QueryByPaymentMethod'
+        - $ref: '#/components/parameters/QueryByPayoutCountry'
+        - $ref: '#/components/parameters/QueryByPayoutCurrency'
+      responses:
+        "200":
+          description: Generated OpenAPI schema successfully
+          content:
+            application/x-yaml:
+              schema:
+                type: string
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - BearerAuth: [ ]
+      x-info:
+        apiType: internal
+  /api/v3/payment-accounts:
+    post:
+      tags:
+        - PaymentAccounts
+      summary: Add Beneficiary And Payment Account V3
+      description: The api creates a beneficiary and payment account for a given client's
+        customer.
+      operationId: addBeneficiaryAndPaymentAccountV3
+      parameters:
+        - $ref: '#/components/parameters/XRequestId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddBeneficiaryAndPaymentAccountRequestV3'
+        required: true
+      responses:
+        "200":
+          description: Beneficiary and payment account created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiaryAndPaymentAccountDetails'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "422":
+          $ref: '#/components/responses/UnprocessableInput'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - BearerAuth: [ ]
+      x-info:
+        apiType: internal
+  /api/v3/payment-accounts/validate:
+    post:
+      tags:
+        - Validations
+      summary: Validate Beneficiary And Payment Account
+      description: The api validates a beneficiary and payment account details
+      operationId: validateBeneficiaryAndPaymentAccount
+      parameters:
+        - $ref: '#/components/parameters/XRequestId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateBeneficiaryAndPaymentAccountRequest'
+        required: true
+      responses:
+        "200":
+          description: Beneficiary and payment account validated successfully.
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "422":
+          $ref: '#/components/responses/UnprocessableInput'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - BearerAuth: [ ]
+      x-info:
+        apiType: internal
+  /api/v1/bank-details:
+    get:
+      tags:
+        - Validations
+      summary: Get Bank Details
+      description: The api gets the bank details for a routing code.
+      operationId: getBankDetails
+      parameters:
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/RoutingCodeType'
+        - $ref: '#/components/parameters/RoutingCodeValue'
+      responses:
+        "200":
+          description: Bank details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankInfo'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - BearerAuth: [ ]
+      x-info:
+        apiType: external
+  /api/v1/cache/flush:
+    delete:
+      tags:
+        - Test
+      summary: Flush Redis Cache
+      description: The api flushes the cache.
+      operationId: flushCache
+      parameters:
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/QueryByCacheName'
+      responses:
+        "200":
+          description: Cache flushed successfully.
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalError'
+      security:
+        - BearerAuth: [ ]
+      x-info:
+        apiType: internal
+components:
+  schemas:
+    BaseBeneficiaryTokenRequest:
+      required:
+        - grantType
+        - clientHashId
+        - customerHashId
+      type: object
+      properties:
+        grantType:
+          type: string
+        clientHashId:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+        customerHashId:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+        redirectUris:
+          $ref: '#/components/schemas/RedirectUrls'
+      description: A request body to generate token for onboarding new beneficiary or managing its account.
+    BeneficiaryAccountTokenRequest:
+      allOf:
+        - $ref: '#/components/schemas/BaseBeneficiaryTokenRequest'
+        - type: object
+          required:
+            - beneficiaryHashId
+          properties:
+            beneficiaryHashId:
+              $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryHashId'
+    BeneficiaryApplicationTokenRequest:
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/BeneficiaryNewApplicationTokenRequest'
+        - $ref: '#/components/schemas/BeneficiaryPendingApplicationTokenRequest'
+      discriminator:
+        propertyName: applicationType
+        mapping:
+          new: '#/components/schemas/BeneficiaryNewApplicationTokenRequest'
+          resume: '#/components/schemas/BeneficiaryPendingApplicationTokenRequest'
+    BeneficiaryApplicationTokenType:
+      type: string
+      enum:
+        - new
+        - resume
+    BaseBeneficiaryApplicationTokenRequest:
+      allOf:
+        - $ref: '#/components/schemas/BaseBeneficiaryTokenRequest'
+        - type: object
+          properties:
+            applicationType:
+              type: string
+          required:
+            - applicationType
+    BeneficiaryNewApplicationTokenRequest:
+      type: object
+      description: A request body to generate token for onboarding new beneficiary.
+      allOf:
+        - $ref: '#/components/schemas/BaseBeneficiaryApplicationTokenRequest'
+        - oneOf:
+            - properties:
+                beneficiaryHashId:
+                  $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryHashId'
+            - properties:
+                beneficiary:
+                  $ref: '#/components/schemas/BeneficiaryEntityTokenDetails'
+    BeneficiaryPendingApplicationTokenRequest:
+      type: object
+      description: A request body to generate token for managing pending beneficiary application.
+      allOf:
+        - $ref: '#/components/schemas/BaseBeneficiaryApplicationTokenRequest'
+        - required:
+            - applicationHashId
+          type: object
+          properties:
+            applicationHashId:
+              $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+    BeneficiaryTokenDetails:
+      required:
+        - expiresIn
+        - accessToken
+        - tokenType
+      type: object
+      properties:
+        accessToken:
+          $ref: '#/components/schemas/JwtToken'
+        tokenType:
+          $ref: '#/components/schemas/BeneficiaryTokenType'
+        expiresIn:
+          type: integer
+        applicationHashId:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+      description: An beneficiary application token details.
+    BeneficiaryTokenType:
+      type: string
+      enum:
+        - Bearer
+      x-enum-varnames:
+        - Bearer
+    BeneficiaryTokenClaims:
+      required:
+        - beneficiaryApplication
+        - client
+        - customer
+        - redirectUris
+        - grantType
+      type: object
+      properties:
+        grantType:
+          $ref: '#/components/schemas/BeneficiaryTokenClaimsGrantType'
+        beneficiary:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+        beneficiaryApplication:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+        client:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+        customer:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+        redirectUris:
+          $ref: '#/components/schemas/RedirectUrls'
+      description: An beneficiary token claims.
+    BeneficiaryTokenClaimsIss:
+      type: string
+      enum:
+        - nium
+      x-enum-varnames:
+        - nium
+    BeneficiaryTokenClaimsGrantType:
+      type: string
+      enum:
+        - application
+        - account
+      x-enum-varnames:
+        - application
+        - account
+    BeneficiaryTokenScope:
+      type: string
+      enum:
+        - beneficiary_application
+        - beneficiary_management
+      x-enum-varnames:
+        - beneficiary_application
+        - beneficiary_management
+    UpdateBeneficiaryApplicationDetailsRequest:
+      type: object
+      properties:
+        beneficiary:
+          $ref: '#/components/schemas/BeneficiaryApplicationDetails'
+        paymentAccounts:
+          type: array
+          items:
+            $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/PaymentAccountDetails'
+        taxPayer:
+          $ref: '#/components/schemas/BeneficiaryTaxPayerDetails'
+      description: A request body to update beneficiary application draft.
+    SubmitBeneficiaryApplicationRequest:
+      type: object
+      properties:
+        authenticationCode:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/AuthenticationCode'
+      description: A request body to submit beneficiary application draft.
+    BeneficiaryOnboardingApplicationDetails:
+      required:
+        - beneficiary
+        - paymentAccounts
+        - taxPayer
+        - status
+      type: object
+      properties:
+        beneficiary:
+          $ref: '#/components/schemas/BeneficiaryApplicationDetails'
+        paymentAccounts:
+          type: array
+          items:
+            $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/PaymentAccountDetails'
+        taxPayer:
+          $ref: '#/components/schemas/BeneficiaryTaxPayerDetails'
+        status:
+          $ref: '#/components/schemas/BeneficiaryOnboardingApplicationStatus'
+      description: A beneficiary onboarding application draft details.
+    BeneficiaryOnboardingApplicationStatus:
+      type: string
+      description: A possible value of a beneficiary application status.
+      default: pending
+      enum:
+        - pending
+        - submitted
+      x-enum-varnames:
+        - pending
+        - submitted
+    AddBeneficiaryAndPaymentAccountRequestV3:
+      required:
+        - beneficiary
+        - clientHashId
+        - customerHashId
+        - paymentAccount
+      type: object
+      properties:
+        authenticationCode:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/AuthenticationCode'
+        clientHashId:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+        customerHashId:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+        beneficiary:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryEntityDetails'
+        paymentAccount:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/PaymentAccountDetails'
+      description: A request body to create beneficiary and payment account for a
+        Nium's client customer.
+    ValidateBeneficiaryAndPaymentAccountRequest:
+      required:
+        - clientHashId
+        - customerHashId
+        - beneficiary
+        - paymentAccount
+      type: object
+      properties:
+        clientHashId:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+        customerHashId:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+        beneficiary:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryEntityDetails'
+        paymentAccount:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/PaymentAccountDetails'
+      description: A request body to validate a beneficiary and payment account details
+    BeneficiaryAndPaymentAccountDetails:
+      required:
+        - beneficiary
+        - paymentAccount
+      type: object
+      properties:
+        beneficiary:
+          $ref: '#/components/schemas/BeneficiaryDetails'
+        paymentAccount:
+          $ref: '#/components/schemas/PaymentAccountInfo'
+      description: A beneficiary and payment account details.
+    ListBeneficiariesResponse:
+      type: object
+      properties:
+        beneficiaries:
+          type: array
+          items:
+            $ref: '#/components/schemas/BeneficiaryDetails'
+        pagination:
+          $ref: '#/components/schemas/CursorPagination'
+      description: A list of all the beneficiary of a Nium's client customer.
+    UpdateBeneficiaryDetailsRequest:
+      type: object
+      properties:
+        authenticationCode:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/AuthenticationCode'
+        contactNumber:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryContactNumber'
+        name:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/Name'
+        status:
+          $ref: '#/components/schemas/BeneficiaryStatus'
+        communicationPreference:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryCommunicationPreference'
+        remitterBeneficiaryRelationship:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/RemitterBeneficiaryRelationship'
+        nameLocalLanguage:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryNameLocalLanguage'
+        contactName:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BusinessContactName'
+        dateOfBirth:
+          type: string
+          format: date
+        establishmentDate:
+          type: string
+          format: date
+      description: A request body to update beneficiary's details.
+    SubmitBeneficiaryApplicationResponse:
+      type: object
+      required:
+        - beneficiary
+      properties:
+        beneficiary:
+          $ref: '#/components/schemas/BeneficiaryDetails'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetailBase'
+      description: A response body to submit beneficiary application draft.
+    BeneficiaryDetails:
+      required:
+        - communicationPreference
+        - contactNumber
+        - customerHashId
+        - email
+        - entityType
+        - id
+        - name
+        - paymentAccounts
+        - remitterBeneficiaryRelationship
+        - status
+        - taxPayer
+      type: object
+      properties:
+        id:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryHashId'
+        customerHashId:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+        name:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/Name'
+        entityType:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/EntityType'
+        email:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryEmail'
+        contactNumber:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryContactNumber'
+        paymentAccounts:
+          type: array
+          items:
+            $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/PaymentAccountHashId'
+        taxPayer:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+        status:
+          $ref: '#/components/schemas/BeneficiaryStatus'
+        communicationPreference:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryCommunicationPreference'
+        remitterBeneficiaryRelationship:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/RemitterBeneficiaryRelationship'
+        businessRegistrationNumber:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BusinessRegistrationNumber'
+        businessType:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BusinessType'
+        dateOfBirth:
+          type: string
+          format: date
+        establishmentDate:
+          type: string
+          format: date
+        nameLocalLanguage:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryNameLocalLanguage'
+        contactName:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BusinessContactName'
+      description: A beneficiary's details.
+    BeneficiaryStatus:
+      type: string
+      description: A possible values of a beneficiary entity status.
+      default: active
+      enum:
+        - blocked
+        - active
+      x-enum-varnames:
+        - blocked
+        - active
+    InternalBeneficiaryStatus:
+      type: string
+      description: A possible values of a beneficiary entity's internal status.
+      default: active
+      enum:
+        - blocked
+        - active
+        - deleted
+      x-enum-varnames:
+        - blocked
+        - active
+        - deleted
+    BeneficiaryEntityTokenDetails:
+      required:
+        - email
+        - entityType
+        - name
+      type: object
+      properties:
+        entityType:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/EntityType'
+        name:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/Name'
+        email:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/Email'
+        contactNumber:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/ContactNumber'
+        address:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/Address'
+      description: An entity details to generate beneficiary application token.
+    BeneficiaryApplicationDetails:
+      required:
+        - address
+        - email
+        - entityType
+        - name
+      type: object
+      properties:
+        entityType:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/EntityType'
+        name:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/Name'
+        email:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryEmail'
+        contactNumber:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryContactNumber'
+        address:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/Address'
+        communicationPreference:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryCommunicationPreference'
+      description: A beneficiary entity information.
+    DeleteBeneficiaryReason:
+      type: string
+      description: A possible reasons for deleting a beneficiary.
+      enum:
+        - closed
+        - inactive
+        - fraudulent
+      x-enum-varnames:
+        - closed
+        - inactive
+        - fraudulent
+    ListPaymentAccountResponse:
+      type: object
+      properties:
+        paymentAccounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentAccountInfo'
+        pagination:
+          $ref: '#/components/schemas/CursorPagination'
+      description: A response body to list beneficiary's payment account details.
+    PaymentAccountInfo:
+      required:
+        - alias
+        - autoSweep
+        - beneficiaryHashId
+        - default
+        - id
+        - openDate
+        - owner
+        - paymentMethod
+        - payoutCountry
+        - payoutCurrency
+        - status
+        - verificationStatus
+      type: object
+      properties:
+        id:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/PaymentAccountHashId'
+        beneficiaryHashId:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryHashId'
+        owner:
+          $ref: '#/components/schemas/OwnerInfo'
+        autoSweep:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/AutoSweepPaymentAccount'
+        alias:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/PaymentAccountAlias'
+        payoutCountry:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CountryCode'
+        payoutCurrency:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CurrencyCode'
+        paymentMethod:
+          $ref: '#/components/schemas/PaymentMethod'
+        verificationStatus:
+          $ref: '#/components/schemas/AccountVerificationStatus'
+        status:
+          $ref: '#/components/schemas/PaymentAccountStatus'
+        bankName:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/BankName'
+        bankCode:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/BankCode'
+        accountType:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/BankAccountType'
+        accountNumber:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/BankAccountNumber'
+        routingCodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoutingCodeInfo'
+        proxy:
+          $ref: '#/components/schemas/ProxyInfo'
+        openDate:
+          type: string
+          format: date
+        default:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/DefaultPaymentAccount'
+        identification:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/OwnerIdentification'
+      description: A beneficiary's payment account details.
+    AccountVerificationStatus:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/AccountVerificationStatusType'
+        date:
+          type: string
+          format: date
+        method:
+          type: string
+      description: A payment account verification of a beneficiary.
+    AccountVerificationStatusType:
+      type: string
+      default: unverified
+      enum:
+        - unknown
+        - verified
+        - pending
+        - unverified
+      x-enum-varnames:
+        - unknown
+        - verified
+        - pending
+        - unverified
+    PaymentAccountStatus:
+      type: string
+      description: A payment account status.
+      default: active
+      enum:
+        - active
+        - inactive
+        - closed
+        - fraudulent
+        - deleted
+      x-enum-varnames:
+        - active
+        - inactive
+        - closed
+        - fraudulent
+        - deleted
+    PaymentMethod:
+      type: string
+      description: A possible values of payment account types of a beneficiary.
+      enum:
+        - local
+        - swift
+        - card
+        - wallet
+        - proxy
+      x-enum-varnames:
+        - local
+        - swift
+        - card
+        - wallet
+        - proxy
+    RoutingCodeTypeEnum:
+      type: string
+      description: A set of possible values for routing code type.
+      enum:
+        - swift
+        - ifsc
+        - sort_code
+        - ach_code
+        - branch_code
+        - bsb_code
+        - location_id
+        - transit_number
+        - cnaps
+        - wallet
+        - branch_name
+      x-enum-varnames:
+        - swift
+        - ifsc
+        - sort_code
+        - ach_code
+        - branch_code
+        - bsb_code
+        - location_id
+        - transit_number
+        - cnaps
+        - wallet
+        - branch_name
+    RoutingCodeInfo:
+      required:
+        - type
+        - value
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/RoutingCodeTypeEnum'
+        value:
+          type: string
+      description: A routing code
+    ProxyInfo:
+      required:
+        - type
+        - value
+      type: object
+      properties:
+        type:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/ProxyType'
+        value:
+          type: string
+      description: A proxy information
+    WalletInfo:
+      type: object
+      required:
+        - type
+        - handle
+      properties:
+        type:
+          $ref: '#/components/schemas/WalletType'
+        handle:
+          $ref: '#/components/schemas/WalletHandle'
+      description: A wallet information
+    WalletType:
+      type: string
+      description: A wallet type
+    WalletHandle:
+      type: object
+      required:
+        - type
+        - value
+      properties:
+        type:
+          $ref: '#/components/schemas/WalletHandleType'
+        value:
+          $ref: '#/components/schemas/WalletHandleValue'
+      description: A wallet handle information
+    WalletHandleType:
+      type: string
+      enum:
+        - email
+        - contact_number
+        - id
+      x-enum-varnames:
+        - email
+        - contact_number
+        - id
+      description: A wallet handle type
+    WalletHandleValue:
+      type: string
+      pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
+      description: A wallet handle value
+    OwnerInfo:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/Name'
+        address:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/Address'
+        identification:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/OwnerIdentification'
+    BankInfo:
+      type: object
+      required:
+        - bankName
+        - countryCode
+      properties:
+        bankName:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/Name'
+        countryCode:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CountryCode'
+        fedwireEnabled:
+          $ref: '#/components/schemas/FedwireEnabled'
+    FedwireEnabled:
+      type: boolean
+      description: A boolean value to indicate if the bank supports Fedwire.
+    BeneficiaryChannel:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/BeneficiaryChannelType'
+        location:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CountryCode'
+        ipAddress:
+          $ref: '#/components/schemas/IpAddress'
+      description: A beneficiary's channel object
+    BeneficiaryChannelType:
+      type: string
+      enum:
+        - hosted
+        - api
+      x-enum-varnames:
+        - hosted
+        - api
+      description: A possible values of a beneficiary's channel type.
+    AddTaxPayerRequest:
+      required:
+        - taxPayer
+      type: object
+      properties:
+        authenticationCode:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/AuthenticationCode'
+        taxPayer:
+          $ref: '#/components/schemas/BeneficiaryTaxPayerDetails'
+      description: A request body to add a tax-payer with a given beneficiary.
+    TaxServiceCreatePayerandFormRequest:
+      $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/CreatePayerAndSubmitFormRequest'
+    BeneficiaryTaxPayerDetails:
+      discriminator:
+        propertyName: filerCountryCode
+        mapping:
+          us: '#/components/schemas/BeneficiaryUSTaxPayerDetails'
+      oneOf:
+        - $ref: '#/components/schemas/BeneficiaryUSTaxPayerDetails'
+    BaseBeneficiaryTaxPayerDetails:
+      type: object
+      required:
+        - filerCountryCode
+      properties:
+        filerCountryCode:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CountryCode'
+    BeneficiaryUSTaxPayerDetails:
+      allOf:
+        - $ref: '#/components/schemas/BaseBeneficiaryTaxPayerDetails'
+        - type: object
+          required:
+            - payer
+            - form
+          properties:
+            payer:
+              $ref: '#/components/schemas/USTaxPayerDetails'
+            form:
+              $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/FormDetails'
+    BaseTaxPayerDetails:
+      required:
+        - taxResidentCountryCode
+        - deliveryPreference
+        - communicationPreference
+        - taxPayerName
+        - taxResidentAddress
+      type: object
+      properties:
+        taxResidentCountryCode:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CountryCode'
+        deliveryPreference:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/DeliveryPreference'
+        communicationPreference:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/CommunicationPreference'
+        taxPayerName:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/main/core.yaml#/components/schemas/Name'
+        taxResidentAddress:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/Address'
+    USTaxPayerDetails:
+      description: A US taxpayer details
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BaseTaxPayerDetails'
+        - required:
+            - tin
+            - taxExempt
+          type: object
+          properties:
+            tin:
+              $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/TinDetails'
+            taxExempt:
+              $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/TaxExempt'
+    IpAddress:
+      pattern: "(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((([0-9a-fA-F]){1,4})\\\
+        :){7}([0-9a-fA-F]){1,4}"
+      type: string
+      description: An IP address that can be either IPv4 or IPv6 format.
+    RedirectUrls:
+      required:
+        - success
+      type: object
+      properties:
+        success:
+          $ref: '#/components/schemas/Uri'
+        refresh:
+          $ref: '#/components/schemas/Uri'
+        cancel:
+          $ref: '#/components/schemas/Uri'
+      description: A redirect uris for hosted beneficiary flow. It helps the hosted beneficiary flow to redirect to client system depends on result of the flows.
+    Uri:
+      type: string
+      description: An acceptable URI format string
+      format: uri
+    ApiGeneratorSchemaType:
+      type: string
+      description: The acceptable types of schemas that will be generated.
+      enum:
+        - payment_accounts
+      x-enum-varnames:
+        - payment_accounts
+    JwtToken:
+      pattern: "^([a-zA-Z0-9_=]+)\\.([a-zA-Z0-9_=]+)\\.([a-zA-Z0-9_\\-\\+\\/=]+)$"
+      type: string
+      format: application/jwt
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+    CursorPagination:
+      $ref: https://raw.githubusercontent.com/nium-global/nium-openapi/main/pagination.yaml#/components/schemas/Pagination
+    ErrorCodes400:
+      type: string
+      description: |
+        The detailed error code associated with HTTP status 400.
+        
+        * `invalid_input`: Syntactically incorrect input provided.
+      enum:
+        - invalid_input
+    ErrorCodes422:
+      type: string
+      description: |
+        The detailed error code associated with HTTP status 422.
+
+        * `default_payment_account_conflict`: Failed to delete the default payment account or set it to false.
+        * `existing_auto_sweep_payment_account`: There is already an existing auto sweep payment account. Unable to add another auto sweep payment account.
+        * `unsupported_payout_currency`: The given payout currency or payment method is not authorized for the client.
+        * `required_auto_sweep`: An auto sweep payment account is required for the beneficiary.
+        * `unsupported_country_code`: The input country code is unsupported.
+        * `invalid_auto_sweep`: The auto sweep account is invalid for the given payout country or payout currency.
+        * `invalid_corridor`: The combination of payout country, payout currency, and payment method is unsupported.
+        * `invalid_country_currency_pair`: The input currency code is unsupported for the given input country code.
+        * `invalid_routing_code`: The routing code type is unsupported for the given combination of payout country, payout currency, and payout method.
+        * `too_many_requests`: Too many requests. Please try again in 5 seconds.
+        * `required_default_payment_account`: The beneficiary does not have a default payment account. Set a default payment account.
+      enum:
+        - default_payment_account_conflict
+        - existing_auto_sweep_payment_account
+        - unsupported_payout_currency
+        - required_auto_sweep
+        - invalid_auto_sweep
+        - unsupported_country_code
+        - invalid_corridor
+        - invalid_country_currency_pair
+        - invalid_routing_code
+        - too_many_requests
+        - required_default_payment_account
+    ErrorCodes404:
+      type: string
+      description: |
+        The detailed error code associated with HTTP status 404.
+
+        * `resource_not_found`: The resource not found.
+      enum:
+        - resource_not_found
+    ErrorDetailBase:
+      $ref: https://raw.githubusercontent.com/nium-global/unified-errors/main/version/1.0.0/unified-errors-1.0.0.yaml#/components/schemas/Error
+    ErrorDetail400:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ErrorDetailBase'
+    ErrorDetail404:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ErrorDetailBase'
+    ErrorDetail500:
+      type: object
+      allOf:
+        - $ref: 'https://raw.githubusercontent.com/nium-global/unified-errors/main/version/1.0.0/unified-errors-1.0.0.yaml#/components/schemas/Standard500Error'
+    ErrorDetail401:
+      type: object
+      allOf:
+        - $ref: 'https://raw.githubusercontent.com/nium-global/unified-errors/main/version/1.0.0/unified-errors-1.0.0.yaml#/components/schemas/Standard401Error'
+    ErrorDetail422:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ErrorDetailBase'
+    ErrorResponse400:
+      required:
+        - errors
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail400'
+    ErrorResponse404:
+      required:
+        - errors
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail404'
+    ErrorResponse500:
+      required:
+        - errors
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail500'
+    ErrorResponse401:
+      required:
+        - errors
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail401'
+    ErrorResponse422:
+      required:
+        - errors
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail422'
+    PlatformErrorResponse:
+      required:
+        - code
+        - errors
+        - message
+        - status
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: string
+    CustomerServiceErrorResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PlatformErrorResponse'
+    WalletServiceErrorResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PlatformErrorResponse'
+    ProductServiceErrorResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PlatformErrorResponse'
+    CoreNotificationServiceErrorResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PlatformErrorResponse'
+    WebhookNotificationRequest:
+      type: object
+      properties:
+        clientHashId:
+          type: string
+        customPlaceHolders:
+          type: object
+          additionalProperties: true
+        customerHashId:
+          type: string
+        template:
+          type: string
+    ScaAuditRequest:
+      required:
+        - activityName
+        - authenticationCode
+        - clientHashId
+        - customerHashId
+        - licenseEntity
+        - referenceId
+        - referenceType
+      type: object
+      properties:
+        activityName:
+          type: string
+        clientHashId:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+        customerHashId:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+        referenceType:
+          type: string
+        referenceId:
+          type: string
+        authenticationCode:
+          type: string
+        exemptionCode:
+          type: string
+        exemptionDescription:
+          type: string
+        licenseEntity:
+          type: string
+    ProductServiceClientDetails:
+      type: object
+      properties:
+        clientCode:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+        licenseEntity:
+          $ref: '#/components/schemas/LicenseEntity'
+        regulatoryRegion:
+          type: string
+        countryCode:
+          type: string
+        autoSweepType:
+          $ref: '#/components/schemas/AutoSweepType'
+    AutoSweepType:
+      type: string
+      enum:
+        - NONE
+        - AUTO_SWEEP_EOD
+    LicenseEntity:
+      type: string
+      enum:
+        - THIRD_PARTY
+        - NIUM
+    WalletServiceClientCurrencies:
+      type: array
+      items:
+        $ref: '#/components/schemas/ClientCurrency'
+    ClientCurrency:
+      type: object
+      properties:
+        curSymbol:
+          type: string
+        remittanceAllowed:
+          type: boolean
+    CustomerServiceCustomerDetails:
+      type: object
+      properties:
+        customerHashId:
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+        regulatoryRegion:
+          type: string
+        status:
+          $ref: '#/components/schemas/CustomerStatus'
+    CustomerStatus:
+      type: string
+      enum:
+        - Pending
+        - Clear
+        - Failed
+        - Suspended
+        - Blocked
+    ValidateBeneficiaryRequest:
+      type: object
+      properties:
+        clientLegalEntity:
+          type: string
+        entityType:
+          type: string
+        payoutCurrency:
+          type: string
+        payoutCountry:
+          type: string
+        name:
+          type: string
+        nameLocalLanguage:
+          type: string
+        alias:
+          type: string
+        postalCode:
+          type: string
+        line1:
+          type: string
+        city:
+          type: string
+        countryCode:
+          type: string
+        state:
+          type: string
+        remitterBeneficiaryRelationship:
+          type: string
+        bankAccountType:
+          type: string
+        accountNumber:
+          type: string
+        bankName:
+          type: string
+        bankCode:
+          type: string
+        identificationType:
+          type: string
+        identificationValue:
+          type: string
+        routingCodes[0].type:
+          type: string
+        routingCodes[0].value:
+          type: string
+        routingCodes[1].type:
+          type: string
+        routingCodes[1].value:
+          type: string
+        proxyType:
+          type: string
+        proxyValue:
+          type: string
+        contactNumber:
+          type: string
+        contactName:
+          type: string
+        email:
+          type: string
+        paymentMethod:
+          type: string
+        cardIssuerName:
+          type: string
+        cardExpiryDate:
+          type: string
+        cardToken:
+          type: string
+    ValidationSchemaResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+        correlationId:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationSchema'
+    ValidationSchema:
+      type: object
+      additionalProperties: true
+    ValidationServiceErrorResponse:
+      type: object
+      properties:
+        requestId:
+          type: string
+        correlationId:
+          type: string
+        statusCode:
+          type: integer
+        name:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+              message:
+                type: string
+              code:
+                type: string
+    ValidationSchemaDetails:
+      type: array
+      description: JSON validation schemas for beneficiary and payment details
+      items:
+        $ref: '#/components/schemas/ValidationSchema'
+    CustomerServiceSupportedCorridorsResponse:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            type: object
+            properties:
+              accountVerification:
+                type: string
+              additionalInfo:
+                type: string
+              beneficiaryAccountType:
+                type: string
+              beneficiaryStatementNarrative:
+                type: string
+              channels:
+                type: string
+              clientType:
+                type: string
+              customerCountry:
+                type: array
+                items:
+                  type: string
+              customerType:
+                type: string
+              cutoffDeliveryNotes:
+                type: string
+              deliveryTAT:
+                type: string
+              destinationCountry:
+                type: string
+              destinationCurrency:
+                type: string
+              fxSource:
+                type: string
+              limitCurrency:
+                type: string
+              mandatoryDataRequirement:
+                type: array
+                items:
+                  type: string
+              maximumAmount:
+                type: string
+              minimumAmount:
+                type: string
+              networkParticipant:
+                type: string
+              paymentMethod:
+                $ref: '#/components/schemas/PaymentMethod'
+              proofOfPayment:
+                type: string
+              routingCodeType:
+                type: string
+              supportingDocuments:
+                type: array
+                items:
+                  type: string
+              wallets:
+                type: array
+                items:
+                  type: string
+    SupportedCorridorsResponse:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+          description: Contains the number of elements in the response body.
+          format: int64
+        totalPages:
+          type: integer
+          description: Contains the number of pages in the response body.
+          format: int32
+        content:
+          type: array
+          description: Contains an array that holds the response data.
+          items:
+            type: object
+            properties:
+              accountVerification:
+                type: string
+                description: Indicates if account verification is supported.
+              additionalInfo:
+                type: string
+                description: Provides additional information about the corridor.
+              entityType:
+                $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/EntityType'
+              beneficiaryStatementNarrative:
+                type: string
+                description: Information visible on the beneficiary statement for
+                  payout transactions.
+              channels:
+                type: string
+                description: Information on channel support.
+              clientType:
+                type: string
+                description: "Type of Client, e.g., FI, NonFI."
+              customerCountry:
+                type: array
+                description: List of countries accepted as remitter country.
+                items:
+                  type: string
+              customerType:
+                $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/EntityType'
+              cutoffDeliveryNotes:
+                type: string
+                description: Information on cut-off times and delivery.
+              deliveryTAT:
+                type: string
+                description: "Describes delivery times like Realtime, T0 – same day,\
+                  \ T1 – next day, etc."
+              payoutCountry:
+                $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CountryCode'
+              payoutCurrency:
+                $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CurrencyCode'
+              fxSource:
+                type: string
+                description: Source of the FX rate.
+              limitCurrency:
+                type: string
+                description: Currency used for the minimum and maximum limits.
+              mandatoryDataRequirement:
+                type: array
+                description: Mandatory information required for the payout request.
+                items:
+                  type: string
+              maximumAmount:
+                type: string
+                description: "Maximum amount limit for the corridor, currency, and\
+                  \ payment method."
+              minimumAmount:
+                type: string
+                description: "Minimum amount limit for the corridor, currency, and\
+                  \ payment method."
+              networkParticipant:
+                type: string
+                description: Type of network participant.
+              paymentMethod:
+                $ref: '#/components/schemas/PaymentMethod'
+              proofOfPayment:
+                type: string
+                description: Information regarding proof of payment.
+              routingCodeType:
+                $ref: '#/components/schemas/RoutingCodeTypeEnum'
+              supportingDocuments:
+                type: array
+                description: List of any supporting documents required for payout.
+                items:
+                  type: string
+              wallets:
+                type: array
+                description: Information on wallet partners.
+                items:
+                  type: string
+    N1StandardErrorResponse:
+      $ref: 'https://raw.githubusercontent.com/nium-global/unified-errors/main/version/1.0.0/unified-errors-1.0.0.yaml#/components/schemas/ErrorResponse'
+    TaxServiceCreatePayerAndSubmitFormRequest:
+      $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/CreatePayerAndSubmitFormRequest'
+    TaxServicePayerAndFormInfo:
+      $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/PayerAndFormInfo'
+  responses:
+    BadRequest:
+      description: Error response when the request is syntactically invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse400'
+    Unauthorized:
+      description: Error response when the request is unauthorized.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse401'
+    NotFound:
+      description: Error response when the requested resource cannot be found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse404'
+    UnprocessableInput:
+      description: Error response when the request is not processable.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse422'
+    InternalError:
+      description: Error response when service has internal error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse500'
+  parameters:
+    UnmaskData:
+      name: unmaskData
+      in: query
+      required: false
+      description: Unmask the data in the response
+      schema:
+        type: boolean
+        default: false
+    ClientHashId:
+      name: clientHashId
+      in: path
+      description: An identifier of a Nium's client
+      required: true
+      style: simple
+      explode: false
+      schema:
+        $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+    CustomerHashId:
+      name: customerHashId
+      in: path
+      description: An identifier of a Nium client's customer
+      required: true
+      style: simple
+      explode: false
+      schema:
+        $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+    BeneficiaryHashId:
+      name: beneficiaryHashId
+      in: path
+      description: An identifier of a Nium client's customer beneficiary
+      required: true
+      style: simple
+      explode: false
+      schema:
+        $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/BeneficiaryHashId'
+    PaymentAccountHashId:
+      name: paymentAccountHashId
+      in: path
+      description: A state for the default payment account
+      required: true
+      style: simple
+      explode: false
+      schema:
+        $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/payment-accounts.yaml#/components/schemas/PaymentAccountHashId'
+    QueryByPayoutCountry:
+      name: payoutCountry
+      in: query
+      description: Accepts the 2-letter ISO-2 destination country code.
+      required: false
+      style: form
+      explode: true
+      schema:
+        $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CountryCode'
+    QueryByEmail:
+      name: email
+      in: query
+      description: An email address of a Nium client's customer beneficiary.
+      required: false
+      style: form
+      explode: true
+      schema:
+        $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/Email'
+    QueryByBeneficiaryName:
+      name: name
+      in: query
+      description: A name of a beneficiary.
+      required: false
+      style: form
+      explode: true
+      schema:
+        $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/Name'
+    QueryByPayoutCurrency:
+      name: payoutCurrency
+      in: query
+      description: A 3-letter ISO-4217 currency code.
+      required: false
+      style: form
+      explode: true
+      schema:
+        $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CurrencyCode'
+    QueryByPaymentMethod:
+      name: paymentMethod
+      in: query
+      description: A supported payment method.
+      required: false
+      style: form
+      explode: true
+      schema:
+        $ref: '#/components/schemas/PaymentMethod'
+    QueryByDefaultPaymentAccount:
+      name: defaultPaymentAccount
+      in: query
+      description: A default payment account.
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: boolean
+    PayoutCurrency:
+      name: payoutCurrency
+      in: path
+      description: A supported payout currency.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CurrencyCode'
+    Reason:
+      name: reason
+      in: query
+      description: A reason for the action.
+      required: true
+      style: form
+      explode: true
+      schema:
+        $ref: '#/components/schemas/DeleteBeneficiaryReason'
+    DeleteTaxPayerReason:
+      name: reason
+      in: query
+      description: A reason for the action.
+      required: true
+      style: form
+      explode: true
+      schema:
+        $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/DeleteReason'
+    AuthenticationCode:
+      name: authenticationCode
+      in: query
+      description: An authentication code as part of SCA(Strong customer authentication).
+      required: false
+      style: form
+      explode: true
+      schema:
+        $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/AuthenticationCode'
+    Limit:
+      name: limit
+      in: query
+      description: The number of items to be returned on each page.
+      required: false
+      style: form
+      explode: true
+      schema:
+        maximum: 50
+        minimum: 1
+        type: integer
+        default: 10
+    XRequestId:
+      $ref: https://raw.githubusercontent.com/nium-global/nium-openapi/main/core.yaml#/components/parameters/XRequestId
+    StartingAfter:
+      $ref: https://raw.githubusercontent.com/nium-global/nium-openapi/main/pagination.yaml#/components/parameters/StartingAfter
+    EndingBefore:
+      $ref: https://raw.githubusercontent.com/nium-global/nium-openapi/main/pagination.yaml#/components/parameters/EndingBefore
+    QueryByBeneficiaryEntityType:
+      name: entityType
+      in: query
+      description: Accepts the beneficiary entity type.
+      required: false
+      style: form
+      explode: true
+      schema:
+        $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/EntityType'
+      x-info:
+        apiType: internal
+    QueryByCustomerType:
+      name: customerType
+      in: query
+      description: Accepts the type of customer.
+      required: false
+      style: form
+      explode: true
+      schema:
+        $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/beneficiaries.yaml#/components/schemas/EntityType'
+      x-info:
+        apiType: internal
+    SortOrder:
+      $ref: https://raw.githubusercontent.com/nium-global/nium-openapi/main/pagination.yaml#/components/parameters/SortOrder
+    Page:
+      name: page
+      in: query
+      description: This API may have a lot of data in response and supports pagination.
+        Integer values from 0 onwards are acceptable. Default page is 0.
+      required: false
+      style: form
+      explode: true
+      schema:
+        minimum: 0
+        type: integer
+        default: 0
+    QueryByCacheName:
+      name: cacheName
+      in: query
+      description: The name of the cache to be flushed.
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+      x-info:
+        api-type: internal
+    QueryByRoutingCodeType:
+      name: routingCodeType
+      in: query
+      description: Determines the routing code type for the currency.
+      required: false
+      style: form
+      explode: true
+      schema:
+        $ref: '#/components/schemas/RoutingCodeTypeEnum'
+      x-info:
+        apiType: internal
+    RoutingCodeType:
+      name: routingCodeType
+      in: query
+      description: A routing code type.
+      required: true
+      style: form
+      explode: true
+      schema:
+        $ref: '#/components/schemas/RoutingCodeTypeEnum'
+    RoutingCodeValue:
+      name: routingCodeValue
+      in: query
+      description: A routing code value.
+      required: true
+      style: form
+      explode: true
+      schema:
+        type: string
+        maxLength: 11
+    SchemaType:
+      name: schemaType
+      in: path
+      description: The type of OpenAPI schemas to be generated.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        $ref: '#/components/schemas/ApiGeneratorSchemaType'
+      x-info:
+        apiType: internal
+    TaxPayerHashId:
+      name: payerHashId
+      in: path
+      description: An identifier of a Nium client's customer tax-payer
+      required: true
+      style: simple
+      explode: false
+      schema:
+        $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CoreApiHashId'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: x-api-key
+      in: header
+    BearerAuth:
+      type: http
+      description: Bearer Token Authentication
+      scheme: bearer
+      bearerFormat: JWT
