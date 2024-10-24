@@ -1580,7 +1580,7 @@ components:
           $ref: '#/components/schemas/BeneficiaryTaxPayerDetails'
       description: A request body to add a tax-payer with a given beneficiary.
     TaxServiceCreatePayerandFormRequest:
-      $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/CreatePayerAndSubmitFormRequest'
+      $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/dev/tax-service-core.yaml#/components/schemas/CreatePayerAndSubmitFormRequest'
     BeneficiaryTaxPayerDetails:
       discriminator:
         propertyName: filerCountryCode
@@ -1606,7 +1606,7 @@ components:
             payer:
               $ref: '#/components/schemas/USTaxPayerDetails'
             form:
-              $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/FormDetails'
+              $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/dev/tax-service-core.yaml#/components/schemas/FormDetails'
     BaseTaxPayerDetails:
       required:
         - taxResidentCountryCode
@@ -1619,13 +1619,13 @@ components:
         taxResidentCountryCode:
           $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/documentation/core.yaml#/components/schemas/CountryCode'
         deliveryPreference:
-          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/DeliveryPreference'
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/dev/tax-service-core.yaml#/components/schemas/DeliveryPreference'
         communicationPreference:
-          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/CommunicationPreference'
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/dev/tax-service-core.yaml#/components/schemas/CommunicationPreference'
         taxPayerName:
           $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/main/core.yaml#/components/schemas/Name'
         taxResidentAddress:
-          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/Address'
+          $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/dev/tax-service-core.yaml#/components/schemas/Address'
     USTaxPayerDetails:
       description: A US taxpayer details
       type: object
@@ -1637,9 +1637,9 @@ components:
           type: object
           properties:
             tin:
-              $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/TinDetails'
+              $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/dev/tax-service-core.yaml#/components/schemas/TinDetails'
             taxExempt:
-              $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/TaxExempt'
+              $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/dev/tax-service-core.yaml#/components/schemas/TaxExempt'
     IpAddress:
       pattern: "(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((([0-9a-fA-F]){1,4})\\\
         :){7}([0-9a-fA-F]){1,4}"
@@ -2181,9 +2181,9 @@ components:
     N1StandardErrorResponse:
       $ref: 'https://raw.githubusercontent.com/nium-global/unified-errors/main/version/1.0.0/unified-errors-1.0.0.yaml#/components/schemas/ErrorResponse'
     TaxServiceCreatePayerAndSubmitFormRequest:
-      $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/CreatePayerAndSubmitFormRequest'
+      $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/dev/tax-service-core.yaml#/components/schemas/CreatePayerAndSubmitFormRequest'
     TaxServicePayerAndFormInfo:
-      $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/PayerAndFormInfo'
+      $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/dev/tax-service-core.yaml#/components/schemas/PayerAndFormInfo'
   responses:
     BadRequest:
       description: Error response when the request is syntactically invalid.
@@ -2340,7 +2340,7 @@ components:
       style: form
       explode: true
       schema:
-        $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/documentation/tax-service-core.yaml#/components/schemas/DeleteReason'
+        $ref: 'https://raw.githubusercontent.com/nium-global/nium-n1-tax-service/dev/tax-service-core.yaml#/components/schemas/DeleteReason'
     AuthenticationCode:
       name: authenticationCode
       in: query
