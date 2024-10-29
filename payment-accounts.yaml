@@ -7790,15 +7790,17 @@ components:
             type: object
             properties:
               handle:
-                description: A wallet payment account handle details of a beneficiary
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    wallet_id: '#/components/schemas/BDTWalletId'
-                oneOf:
-                - $ref: '#/components/schemas/BDTWalletId'
+                $ref: '#/components/schemas/BDTWalletHandle'
               type:
                 $ref: '#/components/schemas/WalletType'
+    BDTWalletHandle:
+      description: A wallet payment account handle details of a beneficiary
+      discriminator:
+        propertyName: type
+        mapping:
+          wallet_id: '#/components/schemas/BDTWalletId'
+      oneOf:
+      - $ref: '#/components/schemas/BDTWalletId'
     BDTWalletId:
       required:
       - type
@@ -10495,15 +10497,17 @@ components:
             type: object
             properties:
               handle:
-                description: A wallet payment account handle details of a beneficiary
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    wallet_id: '#/components/schemas/CNYWalletId'
-                oneOf:
-                - $ref: '#/components/schemas/CNYWalletId'
+                $ref: '#/components/schemas/CNYWalletHandle'
               type:
                 $ref: '#/components/schemas/WalletType'
+    CNYWalletHandle:
+      description: A wallet payment account handle details of a beneficiary
+      discriminator:
+        propertyName: type
+        mapping:
+          wallet_id: '#/components/schemas/CNYWalletId'
+      oneOf:
+      - $ref: '#/components/schemas/CNYWalletId'
     CNYWalletId:
       required:
       - type
@@ -12096,13 +12100,7 @@ components:
             type: object
             properties:
               handle:
-                description: A wallet payment account handle details of a beneficiary
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    contact_number: '#/components/schemas/DZDWalletContactNumber'
-                oneOf:
-                - $ref: '#/components/schemas/DZDWalletContactNumber'
+                $ref: '#/components/schemas/DZDWalletHandle'
               type:
                 $ref: '#/components/schemas/WalletType'
     DZDWalletContactNumber:
@@ -12118,6 +12116,14 @@ components:
           type: string
           description: "Beneficiary Contact Number should be numerical value and must\
             \ start with 05, 06 or 07 followed by 8 digits"
+    DZDWalletHandle:
+      description: A wallet payment account handle details of a beneficiary
+      discriminator:
+        propertyName: type
+        mapping:
+          contact_number: '#/components/schemas/DZDWalletContactNumber'
+      oneOf:
+      - $ref: '#/components/schemas/DZDWalletContactNumber'
     DZDZDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -12621,13 +12627,7 @@ components:
             type: object
             properties:
               handle:
-                description: A wallet payment account handle details of a beneficiary
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    contact_number: '#/components/schemas/EGPWalletContactNumber'
-                oneOf:
-                - $ref: '#/components/schemas/EGPWalletContactNumber'
+                $ref: '#/components/schemas/EGPWalletHandle'
               type:
                 $ref: '#/components/schemas/WalletType'
     EGPWalletContactNumber:
@@ -12642,6 +12642,14 @@ components:
           pattern: "^[A-Za-z0-9\\s-.():_/]{1,13}$"
           type: string
           description: Beneficiary Contact number should not exceed 13 digits in length.
+    EGPWalletHandle:
+      description: A wallet payment account handle details of a beneficiary
+      discriminator:
+        propertyName: type
+        mapping:
+          contact_number: '#/components/schemas/EGPWalletContactNumber'
+      oneOf:
+      - $ref: '#/components/schemas/EGPWalletContactNumber'
     EGSGDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -14305,13 +14313,7 @@ components:
             type: object
             properties:
               handle:
-                description: A wallet payment account handle details of a beneficiary
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    contact_number: '#/components/schemas/GHSWalletContactNumber'
-                oneOf:
-                - $ref: '#/components/schemas/GHSWalletContactNumber'
+                $ref: '#/components/schemas/GHSWalletHandle'
               type:
                 $ref: '#/components/schemas/WalletType'
     GHSWalletContactNumber:
@@ -14328,6 +14330,14 @@ components:
           description: "Beneficiary Contact number may starts with +233 or 0, and\
             \ should be only numeric and the length should not exceeds 9 digits excluding\
             \ 0 or +233."
+    GHSWalletHandle:
+      description: A wallet payment account handle details of a beneficiary
+      discriminator:
+        propertyName: type
+        mapping:
+          contact_number: '#/components/schemas/GHSWalletContactNumber'
+      oneOf:
+      - $ref: '#/components/schemas/GHSWalletContactNumber'
     GHUSDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -16347,15 +16357,17 @@ components:
             type: object
             properties:
               handle:
-                description: A wallet payment account handle details of a beneficiary
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    wallet_id: '#/components/schemas/IDRWalletId'
-                oneOf:
-                - $ref: '#/components/schemas/IDRWalletId'
+                $ref: '#/components/schemas/IDRWalletHandle'
               type:
                 $ref: '#/components/schemas/WalletType'
+    IDRWalletHandle:
+      description: A wallet payment account handle details of a beneficiary
+      discriminator:
+        propertyName: type
+        mapping:
+          wallet_id: '#/components/schemas/IDRWalletId'
+      oneOf:
+      - $ref: '#/components/schemas/IDRWalletId'
     IDRWalletId:
       required:
       - type
@@ -17856,13 +17868,7 @@ components:
             type: object
             properties:
               handle:
-                description: A wallet payment account handle details of a beneficiary
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    contact_number: '#/components/schemas/KESWalletContactNumber'
-                oneOf:
-                - $ref: '#/components/schemas/KESWalletContactNumber'
+                $ref: '#/components/schemas/KESWalletHandle'
               type:
                 type: string
                 description: "Wallet value should be one of mpesa, airtel or equitel."
@@ -17888,6 +17894,14 @@ components:
           description: "Beneficiary Contact number may starts with +254 or 254, and\
             \ should be only numeric and the length should not exceeds 9 digits excluding\
             \ +254 or 254."
+    KESWalletHandle:
+      description: A wallet payment account handle details of a beneficiary
+      discriminator:
+        propertyName: type
+        mapping:
+          contact_number: '#/components/schemas/KESWalletContactNumber'
+      oneOf:
+      - $ref: '#/components/schemas/KESWalletContactNumber'
     KEUSDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -22274,15 +22288,17 @@ components:
             type: object
             properties:
               handle:
-                description: A wallet payment account handle details of a beneficiary
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    wallet_id: '#/components/schemas/NPRWalletId'
-                oneOf:
-                - $ref: '#/components/schemas/NPRWalletId'
+                $ref: '#/components/schemas/NPRWalletHandle'
               type:
                 $ref: '#/components/schemas/WalletType'
+    NPRWalletHandle:
+      description: A wallet payment account handle details of a beneficiary
+      discriminator:
+        propertyName: type
+        mapping:
+          wallet_id: '#/components/schemas/NPRWalletId'
+      oneOf:
+      - $ref: '#/components/schemas/NPRWalletId'
     NPRWalletId:
       required:
       - type
@@ -23396,15 +23412,17 @@ components:
             type: object
             properties:
               handle:
-                description: A wallet payment account handle details of a beneficiary
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    wallet_id: '#/components/schemas/PHPWalletId'
-                oneOf:
-                - $ref: '#/components/schemas/PHPWalletId'
+                $ref: '#/components/schemas/PHPWalletHandle'
               type:
                 $ref: '#/components/schemas/WalletType'
+    PHPWalletHandle:
+      description: A wallet payment account handle details of a beneficiary
+      discriminator:
+        propertyName: type
+        mapping:
+          wallet_id: '#/components/schemas/PHPWalletId'
+      oneOf:
+      - $ref: '#/components/schemas/PHPWalletId'
     PHPWalletId:
       required:
       - type
@@ -23638,15 +23656,17 @@ components:
             type: object
             properties:
               handle:
-                description: A wallet payment account handle details of a beneficiary
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    wallet_id: '#/components/schemas/PKRWalletId'
-                oneOf:
-                - $ref: '#/components/schemas/PKRWalletId'
+                $ref: '#/components/schemas/PKRWalletHandle'
               type:
                 $ref: '#/components/schemas/WalletType'
+    PKRWalletHandle:
+      description: A wallet payment account handle details of a beneficiary
+      discriminator:
+        propertyName: type
+        mapping:
+          wallet_id: '#/components/schemas/PKRWalletId'
+      oneOf:
+      - $ref: '#/components/schemas/PKRWalletId'
     PKRWalletId:
       required:
       - type
@@ -28491,13 +28511,7 @@ components:
             type: object
             properties:
               handle:
-                description: A wallet payment account handle details of a beneficiary
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    contact_number: '#/components/schemas/TZSWalletContactNumber'
-                oneOf:
-                - $ref: '#/components/schemas/TZSWalletContactNumber'
+                $ref: '#/components/schemas/TZSWalletHandle'
               type:
                 $ref: '#/components/schemas/WalletType'
     TZSWalletContactNumber:
@@ -28512,6 +28526,14 @@ components:
           pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
           type: string
           description: A wallet handle value.
+    TZSWalletHandle:
+      description: A wallet payment account handle details of a beneficiary
+      discriminator:
+        propertyName: type
+        mapping:
+          contact_number: '#/components/schemas/TZSWalletContactNumber'
+      oneOf:
+      - $ref: '#/components/schemas/TZSWalletContactNumber'
     TZTZSPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -28845,13 +28867,7 @@ components:
             type: object
             properties:
               handle:
-                description: A wallet payment account handle details of a beneficiary
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    contact_number: '#/components/schemas/UGXWalletContactNumber'
-                oneOf:
-                - $ref: '#/components/schemas/UGXWalletContactNumber'
+                $ref: '#/components/schemas/UGXWalletHandle'
               type:
                 $ref: '#/components/schemas/WalletType'
     UGXWalletContactNumber:
@@ -28868,6 +28884,14 @@ components:
           description: "Beneficiary Contact number may starts with a +256 or 256 ,\
             \ and should be only numeric and the length should not exceeds 9 digits\
             \ excluding 256 or +256."
+    UGXWalletHandle:
+      description: A wallet payment account handle details of a beneficiary
+      discriminator:
+        propertyName: type
+        mapping:
+          contact_number: '#/components/schemas/UGXWalletContactNumber'
+      oneOf:
+      - $ref: '#/components/schemas/UGXWalletContactNumber'
     UMAUDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -30364,13 +30388,7 @@ components:
             type: object
             properties:
               handle:
-                description: A wallet payment account handle details of a beneficiary
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    contact_number: '#/components/schemas/XAFWalletContactNumber'
-                oneOf:
-                - $ref: '#/components/schemas/XAFWalletContactNumber'
+                $ref: '#/components/schemas/XAFWalletHandle'
               type:
                 type: string
                 description: Routing code value 1 should be one of mtn and orange.
@@ -30394,6 +30412,14 @@ components:
           description: "Beneficiary Contact number may starts with +237 , and should\
             \ be only numeric and the length should not exceeds 9 digits excluding\
             \ +237."
+    XAFWalletHandle:
+      description: A wallet payment account handle details of a beneficiary
+      discriminator:
+        propertyName: type
+        mapping:
+          contact_number: '#/components/schemas/XAFWalletContactNumber'
+      oneOf:
+      - $ref: '#/components/schemas/XAFWalletContactNumber'
     XKAUDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -30594,13 +30620,7 @@ components:
             type: object
             properties:
               handle:
-                description: A wallet payment account handle details of a beneficiary
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    contact_number: '#/components/schemas/XOFWalletContactNumber'
-                oneOf:
-                - $ref: '#/components/schemas/XOFWalletContactNumber'
+                $ref: '#/components/schemas/XOFWalletHandle'
               type:
                 $ref: '#/components/schemas/WalletType'
     XOFWalletContactNumber:
@@ -30615,6 +30635,14 @@ components:
           pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
           type: string
           description: Beneficiary Contact Number should be valid
+    XOFWalletHandle:
+      description: A wallet payment account handle details of a beneficiary
+      discriminator:
+        propertyName: type
+        mapping:
+          contact_number: '#/components/schemas/XOFWalletContactNumber'
+      oneOf:
+      - $ref: '#/components/schemas/XOFWalletContactNumber'
     YEYERPaymentMethods:
       discriminator:
         propertyName: paymentMethod
