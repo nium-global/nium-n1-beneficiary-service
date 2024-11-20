@@ -10632,9 +10632,9 @@ components:
               type: object
               properties:
                 walletId:
-                  pattern: "^[A-Za-z0-9\\s-.():_/]{1,64}$"
+                  pattern: "^[A-Za-z0-9\\s-.():_/]{1,65}$"
                   type: string
-                  description: Length of Wallet id should not be more than 64 characters.
+                  description: Length of Wallet id should not be more than 65 characters.
     COAUDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
