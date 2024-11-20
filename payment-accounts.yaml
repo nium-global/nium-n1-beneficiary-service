@@ -11443,13 +11443,17 @@ components:
         type: object
         properties:
           number:
-            $ref: '#/components/schemas/CardNumber'
+            pattern: "^.{1,}$"
+            type: string
+            description: A card payment account number.
       - required:
         - token
         type: object
         properties:
           token:
-            $ref: '#/components/schemas/CardToken'
+            pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
+            type: string
+            description: A token of the card payment account.
     CardExpiryDate:
       pattern: "^[0-9]{4}-[0-9]{2}$"
       type: string
@@ -11459,14 +11463,6 @@ components:
       pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
       type: string
       description: An issuer name of the card payment account.
-    CardNumber:
-      pattern: "^.{1,}$"
-      type: string
-      description: A card payment account number.
-    CardToken:
-      pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
-      type: string
-      description: A token of the card payment account.
     CnapsRoutingCode:
       type: object
       description: Length of cnaps should be 12 digits.
