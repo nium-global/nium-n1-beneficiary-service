@@ -48,7 +48,7 @@ components:
           $ref: '#/components/schemas/BeneficiaryCommunicationPreference'
         remitterBeneficiaryRelationship:
           $ref: '#/components/schemas/RemitterBeneficiaryRelationship'
-        nameLocalLanguage:
+        name_local:
           $ref: '#/components/schemas/BeneficiaryNameLocalLanguage'
       required:
         - entityType
