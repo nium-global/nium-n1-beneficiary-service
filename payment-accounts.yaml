@@ -1347,10 +1347,10 @@ components:
         type: object
         properties:
           accountNumber:
-            pattern: "^[0-9A-Z]{1,34}$"
+            pattern: "^[0-9A-Z]{1,50}$"
             type: string
             description: Account Number should not contain lowercase and special characters.
-              Length should not be more than 34 characters.
+              Length should not be more than 50 characters.
           accountType:
             type: string
             description: "Bank Account should be of the type : checking, saving, maestra\
@@ -3407,7 +3407,6 @@ components:
           chf: '#/components/schemas/GACHFPaymentMethods'
           sgd: '#/components/schemas/GASGDPaymentMethods'
           hkd: '#/components/schemas/GAHKDPaymentMethods'
-          xaf: '#/components/schemas/GAXAFPaymentMethods'
           cad: '#/components/schemas/GACADPaymentMethods'
           nzd: '#/components/schemas/GANZDPaymentMethods'
           jpy: '#/components/schemas/GAJPYPaymentMethods'
@@ -3421,7 +3420,6 @@ components:
       - $ref: '#/components/schemas/GAHKDPaymentMethods'
       - $ref: '#/components/schemas/GAAUDPaymentMethods'
       - $ref: '#/components/schemas/GASGDPaymentMethods'
-      - $ref: '#/components/schemas/GAXAFPaymentMethods'
       - $ref: '#/components/schemas/GAJPYPaymentMethods'
     AllowedCurrenciesForGB:
       discriminator:
@@ -6679,7 +6677,6 @@ components:
           chf: '#/components/schemas/TDCHFPaymentMethods'
           sgd: '#/components/schemas/TDSGDPaymentMethods'
           hkd: '#/components/schemas/TDHKDPaymentMethods'
-          xaf: '#/components/schemas/TDXAFPaymentMethods'
           cad: '#/components/schemas/TDCADPaymentMethods'
           nzd: '#/components/schemas/TDNZDPaymentMethods'
           jpy: '#/components/schemas/TDJPYPaymentMethods'
@@ -6694,7 +6691,6 @@ components:
       - $ref: '#/components/schemas/TDEURPaymentMethods'
       - $ref: '#/components/schemas/TDHKDPaymentMethods'
       - $ref: '#/components/schemas/TDCADPaymentMethods'
-      - $ref: '#/components/schemas/TDXAFPaymentMethods'
     AllowedCurrenciesForTF:
       discriminator:
         propertyName: payoutCurrency
@@ -7824,6 +7820,24 @@ components:
               oneOf:
               - $ref: '#/components/schemas/SwiftRoutingCode'
               - $ref: '#/components/schemas/BranchNameRoutingCode'
+    BDTWallet:
+      required:
+      - provider
+      type: object
+      properties:
+        provider:
+          type: string
+          description: "Routing code value 1 should be one of the following: bkash,\
+            \ rocket."
+          enum:
+          - bkash
+          - rocket
+          x-enum-varnames:
+          - bkash
+          - rocket
+      description: A wallet details of a beneficiary
+      oneOf:
+      - $ref: '#/components/schemas/BDTWalletId'
     BDTWalletAccountDetails:
       description: A wallet payment account details of a beneficiary.
       allOf:
@@ -7840,10 +7854,7 @@ components:
             properties:
               address:
                 required:
-                - city
                 - countryCode
-                - line1
-                - postalCode
                 type: object
                 properties:
                   city:
@@ -7878,30 +7889,16 @@ components:
                 $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
             description: A payment account owner PII information.
           wallet:
-            required:
-            - provider
-            type: object
-            properties:
-              provider:
-                type: string
-                description: "Routing code value 1 should be one of the following:\
-                  \ bkash, rocket."
-                enum:
-                - bkash
-                - rocket
-                x-enum-varnames:
-                - bkash
-                - rocket
-            description: A wallet details of a beneficiary
-            oneOf:
-            - required:
-              - walletId
-              type: object
-              properties:
-                walletId:
-                  pattern: "^[A-Za-z0-9\\s-.():_/]{1,64}$"
-                  type: string
-                  description: Length of Wallet id should not be more than 64 characters.
+            $ref: '#/components/schemas/BDTWallet'
+    BDTWalletId:
+      required:
+      - walletId
+      type: object
+      properties:
+        walletId:
+          pattern: "^[A-Za-z0-9\\s-.():_/]{1,64}$"
+          type: string
+          description: Length of Wallet id should not be more than 64 characters.
     BDUSDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -9885,10 +9882,10 @@ components:
         type: object
         properties:
           accountNumber:
-            pattern: "^[A-Za-z0-9]{1,34}$"
+            pattern: "^[A-Za-z0-9]{1,50}$"
             type: string
             description: Account Number should contain only alphanumeric characters.
-              Length should not be more than 34 characters.
+              Length should not be more than 50 characters.
           accountType:
             type: string
             description: "Bank Account should be one of the following type : checking,\
@@ -10568,6 +10565,16 @@ components:
                   swift: '#/components/schemas/SwiftRoutingCode'
               oneOf:
               - $ref: '#/components/schemas/SwiftRoutingCode'
+    CNYWallet:
+      required:
+      - provider
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/WalletProvider'
+      description: A wallet details of a beneficiary
+      oneOf:
+      - $ref: '#/components/schemas/CNYWalletId'
     CNYWalletAccountDetails:
       description: A wallet payment account details of a beneficiary.
       allOf:
@@ -10619,22 +10626,16 @@ components:
                 $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
             description: A payment account owner PII information.
           wallet:
-            required:
-            - provider
-            type: object
-            properties:
-              provider:
-                $ref: '#/components/schemas/WalletProvider'
-            description: A wallet details of a beneficiary
-            oneOf:
-            - required:
-              - walletId
-              type: object
-              properties:
-                walletId:
-                  pattern: "^[A-Za-z0-9\\s-.():_/]{1,65}$"
-                  type: string
-                  description: Length of Wallet id should not be more than 65 characters.
+            $ref: '#/components/schemas/CNYWallet'
+    CNYWalletId:
+      required:
+      - walletId
+      type: object
+      properties:
+        walletId:
+          pattern: "^[A-Za-z0-9\\s-.():_/]{1,64}$"
+          type: string
+          description: Length of Wallet id should not be more than 64 characters.
     COAUDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -10710,10 +10711,10 @@ components:
         type: object
         properties:
           accountNumber:
-            pattern: "^.{4,45}$"
+            pattern: "^.{4,20}$"
             type: string
             description: Length of Account number should not be less than 4 and more
-              than 45 characters.
+              than 20 characters.
           accountType:
             type: string
             description: "Bank Account should be of the type : checking or saving."
@@ -11463,6 +11464,14 @@ components:
       pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
       type: string
       description: An issuer name of the card payment account.
+    CardNumber:
+      pattern: "^.{1,}$"
+      type: string
+      description: A card payment account number.
+    CardToken:
+      pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
+      type: string
+      description: A token of the card payment account.
     CnapsRoutingCode:
       type: object
       description: Length of cnaps should be 12 digits.
@@ -12139,6 +12148,24 @@ components:
                   swift: '#/components/schemas/SwiftRoutingCode'
               oneOf:
               - $ref: '#/components/schemas/SwiftRoutingCode'
+    DZDWallet:
+      required:
+      - provider
+      type: object
+      properties:
+        provider:
+          type: string
+          description: "Routing code value 1 should be one of the following: orascom\
+            \ (DJEZZY), ooredoo, mobilis."
+          enum:
+          - mobilis
+          - ooredoo
+          x-enum-varnames:
+          - mobilis
+          - ooredoo
+      description: A wallet details of a beneficiary
+      oneOf:
+      - $ref: '#/components/schemas/DZDWalletContactNumber'
     DZDWalletAccountDetails:
       description: A wallet payment account details of a beneficiary.
       allOf:
@@ -12190,31 +12217,17 @@ components:
                 $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
             description: A payment account owner PII information.
           wallet:
-            required:
-            - provider
-            type: object
-            properties:
-              provider:
-                type: string
-                description: "Routing code value 1 should be one of the following:\
-                  \ orascom (DJEZZY), ooredoo, mobilis."
-                enum:
-                - mobilis
-                - ooredoo
-                x-enum-varnames:
-                - mobilis
-                - ooredoo
-            description: A wallet details of a beneficiary
-            oneOf:
-            - required:
-              - contactNumber
-              type: object
-              properties:
-                contactNumber:
-                  pattern: "^(05|06|07)\\d{0,8}$"
-                  type: string
-                  description: "Beneficiary Contact Number should be numerical value\
-                    \ and must start with 05, 06 or 07 followed by 8 digits"
+            $ref: '#/components/schemas/DZDWallet'
+    DZDWalletContactNumber:
+      required:
+      - contactNumber
+      type: object
+      properties:
+        contactNumber:
+          pattern: "^(05|06|07)\\d{0,8}$"
+          type: string
+          description: "Beneficiary Contact Number should be numerical value and must\
+            \ start with 05, 06 or 07 followed by 8 digits"
     DZDZDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -12378,10 +12391,7 @@ components:
             properties:
               address:
                 required:
-                - city
                 - countryCode
-                - line1
-                - postalCode
                 type: object
                 properties:
                   city:
@@ -12404,7 +12414,16 @@ components:
                 type: object
                 properties:
                   type:
-                    $ref: '#/components/schemas/OwnerIdentificationType'
+                    type: string
+                    description: "Identification Type should be ci, ruc or pass"
+                    enum:
+                    - ci
+                    - pass
+                    - ruc
+                    x-enum-varnames:
+                    - ci
+                    - pass
+                    - ruc
                   value:
                     pattern: "^[A-Za-z0-9 .():_/-]{1,255}$"
                     type: string
@@ -12659,6 +12678,35 @@ components:
                   swift: '#/components/schemas/SwiftRoutingCode'
               oneOf:
               - $ref: '#/components/schemas/SwiftRoutingCode'
+    EGPWallet:
+      required:
+      - provider
+      type: object
+      properties:
+        provider:
+          type: string
+          description: "Routing code value 1 should be one of the following: vodafone\
+            \ cash, orange cash, we pay, etisalat cash, qahera cash, phone cash, abk\
+            \ wallet, AUDI2PAY, cashati, MA7FAZTY, bm wallet, smart wallet, ub wallet,\
+            \ aaib pay, qnb wallet, E-POCKET, masarify 3ALTAYER, suenz canal bank\
+            \ wallet, jebe, nbk wallet, flousy phone, vodacom, vodafone, orange, etisalat."
+          enum:
+          - cashati
+          - etisalat
+          - jebe
+          - orange
+          - vodacom
+          - vodafone
+          x-enum-varnames:
+          - cashati
+          - etisalat
+          - jebe
+          - orange
+          - vodacom
+          - vodafone
+      description: A wallet details of a beneficiary
+      oneOf:
+      - $ref: '#/components/schemas/EGPWalletContactNumber'
     EGPWalletAccountDetails:
       description: A wallet payment account details of a beneficiary.
       allOf:
@@ -12706,43 +12754,16 @@ components:
                 $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
             description: A payment account owner PII information.
           wallet:
-            required:
-            - provider
-            type: object
-            properties:
-              provider:
-                type: string
-                description: "Routing code value 1 should be one of the following:\
-                  \ vodafone cash, orange cash, we pay, etisalat cash, qahera cash,\
-                  \ phone cash, abk wallet, AUDI2PAY, cashati, MA7FAZTY, bm wallet,\
-                  \ smart wallet, ub wallet, aaib pay, qnb wallet, E-POCKET, masarify\
-                  \ 3ALTAYER, suenz canal bank wallet, jebe, nbk wallet, flousy phone,\
-                  \ vodacom, vodafone, orange, etisalat."
-                enum:
-                - cashati
-                - etisalat
-                - jebe
-                - orange
-                - vodacom
-                - vodafone
-                x-enum-varnames:
-                - cashati
-                - etisalat
-                - jebe
-                - orange
-                - vodacom
-                - vodafone
-            description: A wallet details of a beneficiary
-            oneOf:
-            - required:
-              - contactNumber
-              type: object
-              properties:
-                contactNumber:
-                  pattern: "^[A-Za-z0-9\\s-.():_/]{1,13}$"
-                  type: string
-                  description: Length of Contact Number should not be more than 13
-                    characters.
+            $ref: '#/components/schemas/EGPWallet'
+    EGPWalletContactNumber:
+      required:
+      - contactNumber
+      type: object
+      properties:
+        contactNumber:
+          pattern: "^[A-Za-z0-9\\s-.():_/]{1,13}$"
+          type: string
+          description: Length of Contact Number should not be more than 13 characters.
     EGSGDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -13066,10 +13087,10 @@ components:
         type: object
         properties:
           accountNumber:
-            pattern: "^[A-Za-z0-9]{1,34}$"
+            pattern: "^[A-Za-z0-9]{1,50}$"
             type: string
             description: Account Number should contain only alphanumeric characters.
-              Length should not be more than 34 characters.
+              Length should not be more than 50 characters.
           accountType:
             type: string
             description: "Bank Account should be of the type : checking, saving, maestra\
@@ -13645,13 +13666,6 @@ components:
           swift: '#/components/schemas/USDSwiftAccountDetails'
       oneOf:
       - $ref: '#/components/schemas/USDSwiftAccountDetails'
-    GAXAFPaymentMethods:
-      discriminator:
-        propertyName: paymentMethod
-        mapping:
-          local: '#/components/schemas/XAFLocalAccountDetails'
-      oneOf:
-      - $ref: '#/components/schemas/XAFLocalAccountDetails'
     GBAUDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -13810,10 +13824,10 @@ components:
         type: object
         properties:
           accountNumber:
-            pattern: "^[0-9A-Z]{1,34}$"
+            pattern: "^[0-9A-Z]{1,50}$"
             type: string
             description: Account Number should not contain lowercase and special characters.
-              Length should not be more than 34 characters.
+              Length should not be more than 50 characters.
           accountType:
             type: string
             description: "Bank Account should be of the type : checking, saving, maestra\
@@ -14283,9 +14297,9 @@ components:
         type: object
         properties:
           accountNumber:
-            pattern: "^[0-9]{0,20}$"
+            pattern: "^[0-9]{0,13}$"
             type: string
-            description: Length of Account Number should not be more than 20 digits.
+            description: Length of Account Number should not be more than 13 digits.
           accountType:
             type: string
             description: "Bank Account should be of the type : checking, saving, maestra\
@@ -14356,6 +14370,26 @@ components:
                   swift: '#/components/schemas/SwiftRoutingCode'
               oneOf:
               - $ref: '#/components/schemas/SwiftRoutingCode'
+    GHSWallet:
+      required:
+      - provider
+      type: object
+      properties:
+        provider:
+          type: string
+          description: "Routing code value 1 should be one of the following: mtn,\
+            \ vodacom, airteltigo."
+          enum:
+          - airteltigo
+          - mtn
+          - vodacom
+          x-enum-varnames:
+          - airteltigo
+          - mtn
+          - vodacom
+      description: A wallet details of a beneficiary
+      oneOf:
+      - $ref: '#/components/schemas/GHSWalletContactNumber'
     GHSWalletAccountDetails:
       description: A wallet payment account details of a beneficiary.
       allOf:
@@ -14407,34 +14441,18 @@ components:
                 $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
             description: A payment account owner PII information.
           wallet:
-            required:
-            - provider
-            type: object
-            properties:
-              provider:
-                type: string
-                description: "Routing code value 1 should be one of the following:\
-                  \ mtn, vodacom, airteltigo."
-                enum:
-                - airteltigo
-                - mtn
-                - vodacom
-                x-enum-varnames:
-                - airteltigo
-                - mtn
-                - vodacom
-            description: A wallet details of a beneficiary
-            oneOf:
-            - required:
-              - contactNumber
-              type: object
-              properties:
-                contactNumber:
-                  pattern: "^(?:\\+233|0)[0-9]{9}$"
-                  type: string
-                  description: "Beneficiary Contact number may starts with +233 or\
-                    \ 0, and should be only numeric and the length should not exceeds\
-                    \ 9 digits excluding 0 or +233."
+            $ref: '#/components/schemas/GHSWallet'
+    GHSWalletContactNumber:
+      required:
+      - contactNumber
+      type: object
+      properties:
+        contactNumber:
+          pattern: "^(?:\\+233|0)[0-9]{9}$"
+          type: string
+          description: "Beneficiary Contact number may starts with +233 or 0, and\
+            \ should be only numeric and the length should not exceeds 9 digits excluding\
+            \ 0 or +233."
     GHUSDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -14943,9 +14961,7 @@ components:
         propertyName: paymentMethod
         mapping:
           card: '#/components/schemas/VisaCardAccountDetails'
-          local: '#/components/schemas/XAFLocalAccountDetails'
       oneOf:
-      - $ref: '#/components/schemas/XAFLocalAccountDetails'
       - $ref: '#/components/schemas/VisaCardAccountDetails'
     GRAUDPaymentMethods:
       discriminator:
@@ -15574,10 +15590,10 @@ components:
         type: object
         properties:
           accountNumber:
-            pattern: "^[A-Za-z0-9]{1,34}$"
+            pattern: "^[A-Za-z0-9]{1,50}$"
             type: string
             description: Account Number should contain only alphanumeric characters.
-              Length should not be more than 34 characters.
+              Length should not be more than 50 characters.
           accountType:
             type: string
             description: "Bank Account should be of the type : checking, saving, maestra\
@@ -15906,9 +15922,7 @@ components:
         propertyName: paymentMethod
         mapping:
           card: '#/components/schemas/VisaCardAccountDetails'
-          local: '#/components/schemas/HNLLocalAccountDetails'
       oneOf:
-      - $ref: '#/components/schemas/HNLLocalAccountDetails'
       - $ref: '#/components/schemas/VisaCardAccountDetails'
     HNJPYPaymentMethods:
       discriminator:
@@ -15917,89 +15931,6 @@ components:
           swift: '#/components/schemas/JPYSwiftAccountDetails'
       oneOf:
       - $ref: '#/components/schemas/JPYSwiftAccountDetails'
-    HNLLocalAccountDetails:
-      description: A local payment account details of a beneficiary
-      allOf:
-      - $ref: '#/components/schemas/BasePaymentAccount'
-      - required:
-        - accountNumber
-        - owner
-        - routingCodes
-        type: object
-        properties:
-          accountNumber:
-            pattern: "^[a-zA-Z0-9]{1,50}$"
-            type: string
-            description: Length of Account Number should not be more than 50 characters.
-          accountType:
-            type: string
-            description: "Bank Account should be of the type : checking, saving"
-            enum:
-            - checking
-            - saving
-            x-enum-varnames:
-            - checking
-            - saving
-          bankCode:
-            pattern: "^\\d{4}$"
-            type: string
-            description: Length of Bank Code should be 4 digits.
-          owner:
-            required:
-            - address
-            - identification
-            type: object
-            properties:
-              address:
-                required:
-                - line1
-                type: object
-                properties:
-                  city:
-                    $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/AddressCity
-                  countryCode:
-                    $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/CountryCode
-                  line1:
-                    $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Line
-                  line2:
-                    $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Line
-                  postalCode:
-                    $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/PostalCode
-                  state:
-                    $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/AddressState
-                description: An address details.
-              identification:
-                required:
-                - type
-                - value
-                type: object
-                properties:
-                  type:
-                    type: string
-                    description: Identification Type should be tid or rtn.
-                    enum:
-                    - rtn
-                    - tid
-                    x-enum-varnames:
-                    - rtn
-                    - tid
-                  value:
-                    $ref: '#/components/schemas/OwnerIdentificationValue'
-                description: An owner's identification details.
-              name:
-                $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
-            description: A payment account owner PII information.
-          routingCodes:
-            maxItems: 1
-            minItems: 1
-            type: array
-            items:
-              discriminator:
-                propertyName: type
-                mapping:
-                  swift: '#/components/schemas/SwiftRoutingCode'
-              oneOf:
-              - $ref: '#/components/schemas/SwiftRoutingCode'
     HNNZDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -16484,6 +16415,30 @@ components:
                   swift: '#/components/schemas/SwiftRoutingCode'
               oneOf:
               - $ref: '#/components/schemas/SwiftRoutingCode'
+    IDRWallet:
+      required:
+      - provider
+      type: object
+      properties:
+        provider:
+          type: string
+          description: "Routing code value 1 should be one of the following: ovo,\
+            \ gopay, dana, linkaja, shopeepay."
+          enum:
+          - dana
+          - gopay
+          - linkaja
+          - ovo
+          - shopeepay
+          x-enum-varnames:
+          - dana
+          - gopay
+          - linkaja
+          - ovo
+          - shopeepay
+      description: A wallet details of a beneficiary
+      oneOf:
+      - $ref: '#/components/schemas/IDRWalletId'
     IDRWalletAccountDetails:
       description: A wallet payment account details of a beneficiary.
       allOf:
@@ -16535,37 +16490,17 @@ components:
                 $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
             description: A payment account owner PII information.
           wallet:
-            required:
-            - provider
-            type: object
-            properties:
-              provider:
-                type: string
-                description: "Routing code value 1 should be one of the following:\
-                  \ ovo, gopay, dana, linkaja, shopeepay."
-                enum:
-                - dana
-                - gopay
-                - linkaja
-                - ovo
-                - shopeepay
-                x-enum-varnames:
-                - dana
-                - gopay
-                - linkaja
-                - ovo
-                - shopeepay
-            description: A wallet details of a beneficiary
-            oneOf:
-            - required:
-              - walletId
-              type: object
-              properties:
-                walletId:
-                  pattern: "^[0-9]{10,13}$"
-                  type: string
-                  description: Length of Wallet id should not be less than 10 and
-                    more than 13 digits.
+            $ref: '#/components/schemas/IDRWallet'
+    IDRWalletId:
+      required:
+      - walletId
+      type: object
+      properties:
+        walletId:
+          pattern: "^[0-9]{10,13}$"
+          type: string
+          description: Length of Wallet id should not be less than 10 and more than
+            13 digits.
     IDSGDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -17847,10 +17782,10 @@ components:
         type: object
         properties:
           accountNumber:
-            pattern: "^[0-9A-Z]{1,34}$"
+            pattern: "^[0-9A-Z]{1,50}$"
             type: string
             description: Account Number should not contain lowercase and special characters.
-              Length should not be more than 34 characters.
+              Length should not be more than 50 characters.
           accountType:
             type: string
             description: "Bank Account should be of the type : checking, saving, maestra\
@@ -17875,7 +17810,6 @@ components:
               address:
                 required:
                 - countryCode
-                - line1
                 type: object
                 properties:
                   city:
@@ -18081,6 +18015,26 @@ components:
               oneOf:
               - $ref: '#/components/schemas/SwiftRoutingCode'
               - $ref: '#/components/schemas/BranchRoutingCode'
+    KESWallet:
+      required:
+      - provider
+      type: object
+      properties:
+        provider:
+          type: string
+          description: "Routing code value 1 should be one of the following: mpesa,\
+            \ airtel, equitel."
+          enum:
+          - airtel
+          - equitel
+          - mpesa
+          x-enum-varnames:
+          - airtel
+          - equitel
+          - mpesa
+      description: A wallet details of a beneficiary
+      oneOf:
+      - $ref: '#/components/schemas/KESWalletContactNumber'
     KESWalletAccountDetails:
       description: A wallet payment account details of a beneficiary.
       allOf:
@@ -18132,34 +18086,18 @@ components:
                 $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
             description: A payment account owner PII information.
           wallet:
-            required:
-            - provider
-            type: object
-            properties:
-              provider:
-                type: string
-                description: "Routing code value 1 should be one of the following:\
-                  \ mpesa, airtel, equitel."
-                enum:
-                - airtel
-                - equitel
-                - mpesa
-                x-enum-varnames:
-                - airtel
-                - equitel
-                - mpesa
-            description: A wallet details of a beneficiary
-            oneOf:
-            - required:
-              - contactNumber
-              type: object
-              properties:
-                contactNumber:
-                  pattern: "^\\+?254[0-9]{9}$"
-                  type: string
-                  description: "Beneficiary Contact number may starts with +254 or\
-                    \ 254, and should be only numeric and the length should not exceeds\
-                    \ 9 digits excluding +254 or 254."
+            $ref: '#/components/schemas/KESWallet'
+    KESWalletContactNumber:
+      required:
+      - contactNumber
+      type: object
+      properties:
+        contactNumber:
+          pattern: "^\\+?254[0-9]{9}$"
+          type: string
+          description: "Beneficiary Contact number may starts with +254 or 254, and\
+            \ should be only numeric and the length should not exceeds 9 digits excluding\
+            \ +254 or 254."
     KEUSDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -19137,10 +19075,8 @@ components:
         mapping:
           local: '#/components/schemas/LKRLocalAccountDetails'
           card: '#/components/schemas/VisaCardAccountDetails'
-          wallet: '#/components/schemas/LKRWalletAccountDetails'
       oneOf:
       - $ref: '#/components/schemas/VisaCardAccountDetails'
-      - $ref: '#/components/schemas/LKRWalletAccountDetails'
       - $ref: '#/components/schemas/LKRLocalAccountDetails'
     LKNZDPaymentMethods:
       discriminator:
@@ -19235,76 +19171,6 @@ components:
                   branch_code: '#/components/schemas/BranchRoutingCode'
               oneOf:
               - $ref: '#/components/schemas/BranchRoutingCode'
-    LKRWalletAccountDetails:
-      description: A wallet payment account details of a beneficiary.
-      allOf:
-      - $ref: '#/components/schemas/BasePaymentAccount'
-      - required:
-        - owner
-        - wallet
-        type: object
-        properties:
-          owner:
-            required:
-            - address
-            type: object
-            properties:
-              address:
-                required:
-                - city
-                - countryCode
-                - line1
-                - postalCode
-                type: object
-                properties:
-                  city:
-                    $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/AddressCity
-                  countryCode:
-                    $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/CountryCode
-                  line1:
-                    $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Line
-                  line2:
-                    $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Line
-                  postalCode:
-                    $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/PostalCode
-                  state:
-                    $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/AddressState
-                description: An address details.
-              identification:
-                required:
-                - type
-                - value
-                type: object
-                properties:
-                  type:
-                    $ref: '#/components/schemas/OwnerIdentificationType'
-                  value:
-                    pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
-                    type: string
-                    description: "Identification Value can contain only these special\
-                      \ characters - (- . ( ) : _ /)"
-                description: An owner's identification details.
-              name:
-                $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
-            description: A payment account owner PII information.
-          wallet:
-            required:
-            - provider
-            type: object
-            properties:
-              provider:
-                $ref: '#/components/schemas/WalletProvider'
-            description: A wallet details of a beneficiary
-            oneOf:
-            - required:
-              - contactNumber
-              type: object
-              properties:
-                contactNumber:
-                  pattern: "^(\\+947)[0-9]{8}$"
-                  type: string
-                  description: Length of Contact Number should not be more than 8
-                    digits starting with +947.
     LKSGDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -22556,6 +22422,43 @@ components:
               oneOf:
               - $ref: '#/components/schemas/LocationIdRoutingCode'
               - $ref: '#/components/schemas/SwiftRoutingCode'
+    NPRWallet:
+      required:
+      - provider
+      type: object
+      properties:
+        provider:
+          type: string
+          description: "Routing code value 1 should be one of the following: cellpay,\
+            \ edheba, hamropay, icash, imepay, khalti, moru, mypay, N-CASH, namaste\
+            \ pay, paywell, prabhu pay, qpay, sajilopay."
+          enum:
+          - cellpay
+          - edheba
+          - hamropay
+          - icash
+          - imepay
+          - khalti
+          - moru
+          - mypay
+          - paywell
+          - qpay
+          - sajilopay
+          x-enum-varnames:
+          - cellpay
+          - edheba
+          - hamropay
+          - icash
+          - imepay
+          - khalti
+          - moru
+          - mypay
+          - paywell
+          - qpay
+          - sajilopay
+      description: A wallet details of a beneficiary
+      oneOf:
+      - $ref: '#/components/schemas/NPRWalletId'
     NPRWalletAccountDetails:
       description: A wallet payment account details of a beneficiary.
       allOf:
@@ -22572,10 +22475,7 @@ components:
             properties:
               address:
                 required:
-                - city
                 - countryCode
-                - line1
-                - postalCode
                 type: object
                 properties:
                   city:
@@ -22610,50 +22510,17 @@ components:
                 $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
             description: A payment account owner PII information.
           wallet:
-            required:
-            - provider
-            type: object
-            properties:
-              provider:
-                type: string
-                description: "Routing code value 1 should be one of the following:\
-                  \ cellpay, edheba, hamropay, icash, imepay, khalti, moru, mypay,\
-                  \ N-CASH, namaste pay, paywell, prabhu pay, qpay, sajilopay."
-                enum:
-                - cellpay
-                - edheba
-                - hamropay
-                - icash
-                - imepay
-                - khalti
-                - moru
-                - mypay
-                - paywell
-                - qpay
-                - sajilopay
-                x-enum-varnames:
-                - cellpay
-                - edheba
-                - hamropay
-                - icash
-                - imepay
-                - khalti
-                - moru
-                - mypay
-                - paywell
-                - qpay
-                - sajilopay
-            description: A wallet details of a beneficiary
-            oneOf:
-            - required:
-              - walletId
-              type: object
-              properties:
-                walletId:
-                  pattern: "^[0-9A-Za-z]{1,50}$"
-                  type: string
-                  description: Account Number should contain only alphanumeric characters.
-                    Length should be minimum 1 and maximum 50 characters.
+            $ref: '#/components/schemas/NPRWallet'
+    NPRWalletId:
+      required:
+      - walletId
+      type: object
+      properties:
+        walletId:
+          pattern: "^[0-9A-Za-z]{1,50}$"
+          type: string
+          description: Account Number should contain only alphanumeric characters.
+            Length should be minimum 1 and maximum 50 characters.
     NPSGDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -22925,10 +22792,10 @@ components:
         type: object
         properties:
           accountNumber:
-            pattern: "^[0-9A-Z]{1,34}$"
+            pattern: "^[0-9A-Z]{1,50}$"
             type: string
             description: Account Number should not contain lowercase and special characters.
-              Length should not be more than 34 characters.
+              Length should not be more than 50 characters.
           accountType:
             type: string
             description: "Bank Account should be of the type : checking, saving, maestra\
@@ -22953,7 +22820,6 @@ components:
               address:
                 required:
                 - countryCode
-                - line1
                 type: object
                 properties:
                   city:
@@ -23616,10 +23482,9 @@ components:
         type: object
         properties:
           accountNumber:
-            pattern: "^[\\d\\s\\W_]{1,25}$"
+            pattern: "^.{1,25}$"
             type: string
-            description: Account Number should be numeric and can contain special
-              characters. Length should not be more than 25 digits.
+            description: Length of Account Number should not be more than 25 characters.
           accountType:
             type: string
             description: "Bank Account should be of the type : checking, saving, maestra\
@@ -23689,6 +23554,49 @@ components:
                   swift: '#/components/schemas/SwiftRoutingCode'
               oneOf:
               - $ref: '#/components/schemas/SwiftRoutingCode'
+    PHPWallet:
+      required:
+      - provider
+      type: object
+      properties:
+        provider:
+          type: string
+          description: "Routing code value 1 should be one of the following: gcash,\
+            \ paymaya, grabpay, shopeepay, starpay, tayocash, palawanpay, lulu, ussc,\
+            \ juancash, iremit, maya, bayad, coinsph."
+          enum:
+          - bayad
+          - coinsph
+          - gcash
+          - grabpay
+          - iremit
+          - juancash
+          - lulu
+          - maya
+          - palawanpay
+          - paymaya
+          - shopeepay
+          - starpay
+          - tayocash
+          - ussc
+          x-enum-varnames:
+          - bayad
+          - coinsph
+          - gcash
+          - grabpay
+          - iremit
+          - juancash
+          - lulu
+          - maya
+          - palawanpay
+          - paymaya
+          - shopeepay
+          - starpay
+          - tayocash
+          - ussc
+      description: A wallet details of a beneficiary
+      oneOf:
+      - $ref: '#/components/schemas/PHPWalletId'
     PHPWalletAccountDetails:
       description: A wallet payment account details of a beneficiary.
       allOf:
@@ -23740,56 +23648,17 @@ components:
                 $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
             description: A payment account owner PII information.
           wallet:
-            required:
-            - provider
-            type: object
-            properties:
-              provider:
-                type: string
-                description: "Routing code value 1 should be one of the following:\
-                  \ gcash, paymaya, grabpay, shopeepay, starpay, tayocash, palawanpay,\
-                  \ lulu, ussc, juancash, iremit, maya, bayad, coinsph."
-                enum:
-                - bayad
-                - coinsph
-                - gcash
-                - grabpay
-                - iremit
-                - juancash
-                - lulu
-                - maya
-                - palawanpay
-                - paymaya
-                - shopeepay
-                - starpay
-                - tayocash
-                - ussc
-                x-enum-varnames:
-                - bayad
-                - coinsph
-                - gcash
-                - grabpay
-                - iremit
-                - juancash
-                - lulu
-                - maya
-                - palawanpay
-                - paymaya
-                - shopeepay
-                - starpay
-                - tayocash
-                - ussc
-            description: A wallet details of a beneficiary
-            oneOf:
-            - required:
-              - walletId
-              type: object
-              properties:
-                walletId:
-                  pattern: "^[0-9]{1,11}$"
-                  type: string
-                  description: Account Number should not contain special characters.
-                    Length should not be more than 11 digits.
+            $ref: '#/components/schemas/PHPWallet'
+    PHPWalletId:
+      required:
+      - walletId
+      type: object
+      properties:
+        walletId:
+          pattern: "^[0-9]{1,11}$"
+          type: string
+          description: Wallet id should not contain special characters and length
+            should not be more than 11 digits.
     PHSGDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -23953,6 +23822,26 @@ components:
                   swift: '#/components/schemas/SwiftRoutingCode'
               oneOf:
               - $ref: '#/components/schemas/SwiftRoutingCode'
+    PKRWallet:
+      required:
+      - provider
+      type: object
+      properties:
+        provider:
+          type: string
+          description: "Routing code value 1 should be one of the following: jazzcash,\
+            \ easypaisa, sadapay."
+          enum:
+          - easypaisa
+          - jazzcash
+          - sadapay
+          x-enum-varnames:
+          - easypaisa
+          - jazzcash
+          - sadapay
+      description: A wallet details of a beneficiary
+      oneOf:
+      - $ref: '#/components/schemas/PKRWalletId'
     PKRWalletAccountDetails:
       description: A wallet payment account details of a beneficiary.
       allOf:
@@ -24004,33 +23893,17 @@ components:
                 $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
             description: A payment account owner PII information.
           wallet:
-            required:
-            - provider
-            type: object
-            properties:
-              provider:
-                type: string
-                description: "Routing code value 1 should be one of the following:\
-                  \ jazzcash, easypaisa, sadapay."
-                enum:
-                - easypaisa
-                - jazzcash
-                - sadapay
-                x-enum-varnames:
-                - easypaisa
-                - jazzcash
-                - sadapay
-            description: A wallet details of a beneficiary
-            oneOf:
-            - required:
-              - walletId
-              type: object
-              properties:
-                walletId:
-                  pattern: "^[A-Za-z0-9]{1,50}$"
-                  type: string
-                  description: Account Number should contain only alphanumeric characters.
-                    Length should not be more than 50 characters.
+            $ref: '#/components/schemas/PKRWallet'
+    PKRWalletId:
+      required:
+      - walletId
+      type: object
+      properties:
+        walletId:
+          pattern: "^[A-Za-z0-9]{1,50}$"
+          type: string
+          description: Account Number should contain only alphanumeric characters.
+            Length should not be more than 50 characters.
     PKSGDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -25439,9 +25312,10 @@ components:
         type: object
         properties:
           accountNumber:
-            pattern: "^RO[0-9]{2}[A-Z]{4}[0-9]{16}$"
+            pattern: "^[A-Za-z0-9]{1,50}$"
             type: string
-            description: Account Number should be a valid Romania IBAN.
+            description: Account Number should contain only alphanumeric characters.
+              Length should not be more than 50 characters.
           accountType:
             type: string
             description: "Bank Account should be of the type : checking, saving, maestra\
@@ -25470,7 +25344,6 @@ components:
                 - city
                 - countryCode
                 - line1
-                - postalCode
                 type: object
                 properties:
                   city:
@@ -26452,9 +26325,10 @@ components:
         type: object
         properties:
           accountNumber:
-            pattern: "^[A-Z]{2}[0-9]{2}([0-9]|[A-Z])+([0-9A-Z]+){10,31}$"
+            pattern: "^[A-Za-z0-9]{1,50}$"
             type: string
-            description: Beneficiary Account Number should be valid Singapore Iban.
+            description: Account Number should contain only alphanumeric characters.
+              Length should not be more than 50 characters.
           accountType:
             type: string
             description: "Bank Account should be of the type : checking, saving, maestra\
@@ -27621,13 +27495,6 @@ components:
           swift: '#/components/schemas/USDSwiftAccountDetails'
       oneOf:
       - $ref: '#/components/schemas/USDSwiftAccountDetails'
-    TDXAFPaymentMethods:
-      discriminator:
-        propertyName: paymentMethod
-        mapping:
-          local: '#/components/schemas/XAFLocalAccountDetails'
-      oneOf:
-      - $ref: '#/components/schemas/XAFLocalAccountDetails'
     TFAUDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -28897,6 +28764,28 @@ components:
                   swift: '#/components/schemas/SwiftRoutingCode'
               oneOf:
               - $ref: '#/components/schemas/SwiftRoutingCode'
+    TZSWallet:
+      required:
+      - provider
+      type: object
+      properties:
+        provider:
+          type: string
+          description: "Routing code value 1 should be one of the following: airtel,\
+            \ tigo, halopesa, vodacom."
+          enum:
+          - airtel
+          - halopesa
+          - tigo
+          - vodacom
+          x-enum-varnames:
+          - airtel
+          - halopesa
+          - tigo
+          - vodacom
+      description: A wallet details of a beneficiary
+      oneOf:
+      - $ref: '#/components/schemas/TZSWalletContactNumber'
     TZSWalletAccountDetails:
       description: A wallet payment account details of a beneficiary.
       allOf:
@@ -28947,35 +28836,17 @@ components:
                 $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
             description: A payment account owner PII information.
           wallet:
-            required:
-            - provider
-            type: object
-            properties:
-              provider:
-                type: string
-                description: "Routing code value 1 should be one of the following:\
-                  \ airtel, tigo, halopesa, vodacom."
-                enum:
-                - airtel
-                - halopesa
-                - tigo
-                - vodacom
-                x-enum-varnames:
-                - airtel
-                - halopesa
-                - tigo
-                - vodacom
-            description: A wallet details of a beneficiary
-            oneOf:
-            - required:
-              - contactNumber
-              type: object
-              properties:
-                contactNumber:
-                  pattern: "^\\+255[0-9]{9}$"
-                  type: string
-                  description: "Contact number should not be more than 9 digits, and\
-                    \ should start with +255."
+            $ref: '#/components/schemas/TZSWallet'
+    TZSWalletContactNumber:
+      required:
+      - contactNumber
+      type: object
+      properties:
+        contactNumber:
+          pattern: "^[0-9]{1,17}$"
+          type: string
+          description: Beneficiary Contact number should be only numeric and the length
+            should not exceeds 17 digits.
     TZTZSPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -29249,6 +29120,28 @@ components:
                   branch_code: '#/components/schemas/BranchRoutingCode'
               oneOf:
               - $ref: '#/components/schemas/BranchRoutingCode'
+    UGXWallet:
+      required:
+      - provider
+      type: object
+      properties:
+        provider:
+          type: string
+          description: "Routing code value 1 should be one of the following: africell,\
+            \ airtel, mtn, telecom."
+          enum:
+          - africell
+          - airtel
+          - mtn
+          - telecom
+          x-enum-varnames:
+          - africell
+          - airtel
+          - mtn
+          - telecom
+      description: A wallet details of a beneficiary
+      oneOf:
+      - $ref: '#/components/schemas/UGXWalletContactNumber'
     UGXWalletAccountDetails:
       description: A wallet payment account details of a beneficiary.
       allOf:
@@ -29301,36 +29194,18 @@ components:
                 $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
             description: A payment account owner PII information.
           wallet:
-            required:
-            - provider
-            type: object
-            properties:
-              provider:
-                type: string
-                description: "Routing code value 1 should be one of the following:\
-                  \ africell, airtel, mtn, telecom."
-                enum:
-                - africell
-                - airtel
-                - mtn
-                - telecom
-                x-enum-varnames:
-                - africell
-                - airtel
-                - mtn
-                - telecom
-            description: A wallet details of a beneficiary
-            oneOf:
-            - required:
-              - contactNumber
-              type: object
-              properties:
-                contactNumber:
-                  pattern: "^\\+?(256)?[0-9]{9}$"
-                  type: string
-                  description: "Beneficiary Contact number may starts with a +256\
-                    \ or 256 , and should be only numeric and the length should not\
-                    \ exceeds 9 digits excluding 256 or +256."
+            $ref: '#/components/schemas/UGXWallet'
+    UGXWalletContactNumber:
+      required:
+      - contactNumber
+      type: object
+      properties:
+        contactNumber:
+          pattern: "^\\+?(256)?[0-9]{9}$"
+          type: string
+          description: "Beneficiary Contact number may starts with a +256 or 256 ,\
+            \ and should be only numeric and the length should not exceeds 9 digits\
+            \ excluding 256 or +256."
     UMAUDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -29524,10 +29399,10 @@ components:
         type: object
         properties:
           accountNumber:
-            pattern: "^[0-9A-Za-z]{1,34}$"
+            pattern: "^[0-9A-Za-z]{1,50}$"
             type: string
             description: Account Number should contain only alphanumeric characters.
-              Length should be minimum 1 and maximum 34 characters.
+              Length should be minimum 1 and maximum 50 characters.
           accountType:
             type: string
             description: "Bank Account should be of the type : checking, saving, maestra\
@@ -30677,6 +30552,22 @@ components:
           swift: '#/components/schemas/USDSwiftAccountDetails'
       oneOf:
       - $ref: '#/components/schemas/USDSwiftAccountDetails'
+    WalletDetails:
+      oneOf:
+      - $ref: '#/components/schemas/DZDWallet'
+      - $ref: '#/components/schemas/TZSWallet'
+      - $ref: '#/components/schemas/XOFWallet'
+      - $ref: '#/components/schemas/CNYWallet'
+      - $ref: '#/components/schemas/UGXWallet'
+      - $ref: '#/components/schemas/IDRWallet'
+      - $ref: '#/components/schemas/EGPWallet'
+      - $ref: '#/components/schemas/KESWallet'
+      - $ref: '#/components/schemas/PHPWallet'
+      - $ref: '#/components/schemas/XAFWallet'
+      - $ref: '#/components/schemas/GHSWallet'
+      - $ref: '#/components/schemas/NPRWallet'
+      - $ref: '#/components/schemas/PKRWallet'
+      - $ref: '#/components/schemas/BDTWallet'
     WalletProvider:
       pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
       type: string
@@ -30688,10 +30579,11 @@ components:
       - required:
         - accountNumber
         - owner
+        - routingCodes
         type: object
         properties:
           accountNumber:
-            pattern: "^(CM|TD|GA|GQ)[0-9]{2}[A-Za-z0-9]{5}[0-9]{18}$"
+            pattern: "^CM[0-9]{2}[A-Za-z0-9]{5}[0-9]{18}$"
             type: string
             description: Beneficiary Account Number should be a valid Cameroon IBAN
           accountType:
@@ -30755,7 +30647,7 @@ components:
             description: A payment account owner PII information.
           routingCodes:
             maxItems: 1
-            minItems: 0
+            minItems: 1
             type: array
             items:
               discriminator:
@@ -30764,6 +30656,24 @@ components:
                   swift: '#/components/schemas/SwiftRoutingCode'
               oneOf:
               - $ref: '#/components/schemas/SwiftRoutingCode'
+    XAFWallet:
+      required:
+      - provider
+      type: object
+      properties:
+        provider:
+          type: string
+          description: "Routing code value 1 should be one of the following: mtn,\
+            \ orange."
+          enum:
+          - mtn
+          - orange
+          x-enum-varnames:
+          - mtn
+          - orange
+      description: A wallet details of a beneficiary
+      oneOf:
+      - $ref: '#/components/schemas/XAFWalletContactNumber'
     XAFWalletAccountDetails:
       description: A wallet payment account details of a beneficiary.
       allOf:
@@ -30816,32 +30726,18 @@ components:
                 $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
             description: A payment account owner PII information.
           wallet:
-            required:
-            - provider
-            type: object
-            properties:
-              provider:
-                type: string
-                description: "Routing code value 1 should be one of the following:\
-                  \ mtn, orange."
-                enum:
-                - mtn
-                - orange
-                x-enum-varnames:
-                - mtn
-                - orange
-            description: A wallet details of a beneficiary
-            oneOf:
-            - required:
-              - contactNumber
-              type: object
-              properties:
-                contactNumber:
-                  pattern: "^(?:\\+237)?[0-9]{9}$"
-                  type: string
-                  description: "Beneficiary Contact number may starts with +237 ,\
-                    \ and should be only numeric and the length should not exceeds\
-                    \ 9 digits excluding +237."
+            $ref: '#/components/schemas/XAFWallet'
+    XAFWalletContactNumber:
+      required:
+      - contactNumber
+      type: object
+      properties:
+        contactNumber:
+          pattern: "^(?:\\+237)?[0-9]{9}$"
+          type: string
+          description: "Beneficiary Contact number may starts with +237 , and should\
+            \ be only numeric and the length should not exceeds 9 digits excluding\
+            \ +237."
     XKAUDPaymentMethods:
       discriminator:
         propertyName: paymentMethod
@@ -30984,6 +30880,16 @@ components:
               name:
                 $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
             description: A payment account owner PII information.
+    XOFWallet:
+      required:
+      - provider
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/WalletProvider'
+      description: A wallet details of a beneficiary
+      oneOf:
+      - $ref: '#/components/schemas/XOFWalletContactNumber'
     XOFWalletAccountDetails:
       description: A wallet payment account details of a beneficiary.
       allOf:
@@ -31036,22 +30942,16 @@ components:
                 $ref: https://raw.githubusercontent.com/nium-global/nium-n1-beneficiary-service/dev/core.yaml#/components/schemas/Name
             description: A payment account owner PII information.
           wallet:
-            required:
-            - provider
-            type: object
-            properties:
-              provider:
-                $ref: '#/components/schemas/WalletProvider'
-            description: A wallet details of a beneficiary
-            oneOf:
-            - required:
-              - contactNumber
-              type: object
-              properties:
-                contactNumber:
-                  pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
-                  type: string
-                  description: Beneficiary Contact Number should be valid
+            $ref: '#/components/schemas/XOFWallet'
+    XOFWalletContactNumber:
+      required:
+      - contactNumber
+      type: object
+      properties:
+        contactNumber:
+          pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
+          type: string
+          description: Beneficiary Contact Number should be valid
     YEYERPaymentMethods:
       discriminator:
         propertyName: paymentMethod
