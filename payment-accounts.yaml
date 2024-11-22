@@ -25096,7 +25096,7 @@ components:
       - uen
       - vpa
     ProxyValue:
-      pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
+      pattern: "^[A-Za-z0-9\\s-.():_/@+]{1,255}$"
       type: string
       description: A proxy payment account value.
     QAAUDPaymentMethods:
