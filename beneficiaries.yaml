@@ -18,10 +18,12 @@ paths: {}
 components:
   schemas:
     BeneficiaryHashId:
+      title: Beneficiary Hash Id
       type: string
       pattern: "^[0-9a-fA-F]{24}$|^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
       description: A beneficiary identifier
     EntityType:
+      title: Entity Type
       type: string
       description: A beneficiary entity type.
       enum:
@@ -31,6 +33,7 @@ components:
         - individual
         - corporate
     BeneficiaryBaseDetails:
+      title: Beneficiary Base Details
       type: object
       description: Base details for a beneficiary entity.
       properties:
@@ -55,6 +58,7 @@ components:
         - email
         - name
     BeneficiaryEntityDetails:
+      title: Beneficiary Entity Details
       type: object
       description: A beneficiary entity details.
       discriminator:
@@ -66,6 +70,7 @@ components:
         - $ref: '#/components/schemas/IndividualEntityDetails'
         - $ref: '#/components/schemas/BusinessEntityDetails'
     BusinessEntityDetails:
+      title: Business Entity Details
       allOf:
         - $ref: '#/components/schemas/BeneficiaryBaseDetails'
         - type: object
@@ -83,14 +88,17 @@ components:
           required:
             - businessRegistrationNumber
             - businessType
-    BusinessContactName: 
+    BusinessContactName:
+      title: Business Contact Name
       type: string
       pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
       description: This field accepts the name of the contact person of the business, applicable when beneficiary is a business.
     BusinessRegistrationNumber:
+      title: Business Registration Number
       type: string
       description: A beneficiary's business registration number.
     BusinessType:
+      title: Business Type
       type: string
       description: This field accepts the type of the business, when the beneficiary is a business.
       example: partnership
@@ -102,6 +110,7 @@ components:
         - government_owned_entity
         - financial_institution
     IndividualEntityDetails:
+      title: Individual Entity Details
       allOf:
         - $ref: '#/components/schemas/BeneficiaryBaseDetails'
         - type: object
@@ -111,6 +120,7 @@ components:
               type: string
               format: date
     BeneficiaryEmail:
+      title: Beneficiary Email
       required:
         - value
       type: object
@@ -122,6 +132,7 @@ components:
           default: false
       description: A beneficiary's contact email details.
     BeneficiaryContactNumber:
+      title: Beneficiary Contact Number
       required:
         - number
       type: object
@@ -133,6 +144,7 @@ components:
           default: false
       description: A beneficiary's contact number details.
     BeneficiaryCommunicationPreference:
+      title: Beneficiary Communication Preference
       type: string
       description: A preferred communication channel of a beneficiary.
       enum:
@@ -142,6 +154,7 @@ components:
         - phone
         - email
     BeneficiaryChannel:
+      title: Beneficiary Channel
       type: object
       properties:
         type:
@@ -152,6 +165,7 @@ components:
           $ref: ./core.yaml#/components/schemas/IpAddress
       description: A beneficiary's channel object
     BeneficiaryChannelType:
+      title: Beneficiary Channel Type
       type: string
       description: A possible values of a beneficiary's channel type.
       enum:
@@ -161,11 +175,13 @@ components:
         - hosted
         - api
     RemitterBeneficiaryRelationship:
+      title: Remitter Beneficiary Relationship
       pattern: "^.[A-Za-z0-9 -.]{1,255}$"
       type: string
       description: A relationship between a remitter and beneficiary in the context
         of the transaction.
     BeneficiaryNameLocalLanguage:
+      title: Beneficiary Name Local Language
       type: string
       description: A beneficiary name in the local language.
       pattern: "^[\\p{L}\\p{N}\\s\\-().:/_]{1,255}$"

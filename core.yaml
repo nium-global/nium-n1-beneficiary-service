@@ -18,61 +18,74 @@ paths: {}
 components:
   schemas:
     AuthenticationCode:
+      title: Authentication Code
       type: string
-      description: "This fields accepts the authenticationCode generated as part of\
-        \ SCA(Strong Customer Authentication). Note: Authentication code must be passed\
-        \ if regulatory region of the program is UK or EU and License Entity NIUM.\
-        \ For other region, this field is non-mandatory"
+      description: |
+        This field accepts the authenticationCode generated as part of SCA (Strong Customer Authentication).
+        Note: Authentication code must be passed if the regulatory region of the program is UK or EU and License Entity NIUM.
+        For other regions, this field is non-mandatory.
     Verified:
+      title: Verified
       type: boolean
       default: false
     CountryCode:
+      title: Country Code
       pattern: "^[a-z]{2}$"
       type: string
       description: A 2-letter ISO country code.
       example: us
     CurrencyCode:
+      title: Currency Code
       pattern: "^[a-z]{3}$"
       type: string
       description: A 3-letter ISO-4217 currency code.
       example: usd
     Email:
+      title: Email
       pattern: "^([a-zA-Z0-9+_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,63})$"
       type: string
-      description: An email address
+      description: An email address.
     ContactNumber:
+      title: Contact Number
       pattern: "^\\+[0-9]{1,17}$"
       type: string
-      description: A contact number
+      description: A contact number.
       example: "+911234567890"
     PostalCode:
+      title: Postal Code
       pattern: "^[0-9]{0,15}$"
       type: string
       description: An address postal or zip code.
       example: "94560"
     AddressState:
+      title: Address State
       pattern: "^[A-Za-z0-9\\s-.():_/]{1,50}$"
       type: string
-      description: An address state
+      description: An address state.
       example: "California"
     AddressCity:
+      title: Address City
       pattern: "^[A-Za-z0-9\\s-.():_/]{1,50}$"
       type: string
-      description: An address city
+      description: An address city.
       example: "Newark"
     CoreApiHashId:
+      title: Core API Hash Id
       type: string
       format: UUID
       example: abc1234-5d6e-0a8b-c8d7-3a7706a0c312
     Name:
+      title: Name
       pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
       type: string
-      description: An official name
+      description: An official name.
     Line:
+      title: Line
       pattern: "^[A-Za-z0-9\\s-.():_/]{1,255}$"
       type: string
-      description: An address line
+      description: An address line.
     Address:
+      title: Address
       required:
         - city
         - countryCode
@@ -93,9 +106,9 @@ components:
           $ref: 'core.yaml#/components/schemas/CountryCode'
         postalCode:
           $ref: '#/components/schemas/PostalCode'
-      description: An address details.
+      description: An address details object.
     IpAddress:
-      pattern: "(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((([0-9a-fA-F]){1,4})\\\
-        :){7}([0-9a-fA-F]){1,4}"
+      title: IP Address
+      pattern: "(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((([0-9a-fA-F]){1,4})\\:){7}([0-9a-fA-F]){1,4}"
       type: string
       description: An IP address that can be either IPv4 or IPv6 format.
